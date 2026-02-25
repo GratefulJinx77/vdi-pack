@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VDI Assessment Pack — Architecture</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230066cc'/%3E%3Ctext x='16' y='23' font-family='Segoe UI,Arial,sans-serif' font-size='22' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #ffffff; --card-bg: #f8f9fa; --card-border: #e5e7eb;
+  --text-primary: #1a1a2e; --text-secondary: #6b7280;
+  --accent: #0066cc; --red: #dc2626; --orange: #d97706;
+  --gray: #9ca3af; --green: #059669;
+  --ux: #0066cc; --capacity: #d97706; --security: #dc2626; --resilience: #059669;
+}
+body { background: var(--bg); color: var(--text-primary); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; line-height: 1.6; font-size: 15px; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px 80px; }
+
+/* Breadcrumb */
+.breadcrumb { max-width: 1200px; margin: 0 auto; padding: 12px 24px; font-size: 14px; }
+.breadcrumb a { color: var(--accent); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+
+/* Header */
+.header { background: linear-gradient(135deg, #0066cc 0%, #004a99 100%); border-bottom: 1px solid var(--card-border); padding: 32px 0; margin-bottom: 32px; }
+.header-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.header h1 { font-size: 28px; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
+.header h1 span { color: rgba(255,255,255,0.8); }
+.header .subtitle { color: rgba(255,255,255,0.75); font-size: 14px; margin-bottom: 16px; }
+.stats-ribbon { display: flex; gap: 24px; flex-wrap: wrap; }
+.stat { display: flex; align-items: baseline; gap: 6px; }
+.stat-value { font-size: 20px; font-weight: 700; color: #ffffff; }
+.stat-label { font-size: 13px; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* Sections */
+section { margin-bottom: 32px; }
+section > h2 { font-size: 20px; font-weight: 600; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--card-border); }
+.card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 20px; margin-bottom: 16px; }
+.card h3 { font-size: 16px; font-weight: 600; margin-bottom: 12px; color: var(--text-primary); }
+
+/* Tables */
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--card-border); }
+th { color: var(--text-secondary); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; background: rgba(110,118,129,0.04); }
+td { color: var(--text-primary); }
+tr:last-child td { border-bottom: none; }
+td code, th code { background: rgba(110,118,129,0.15); padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: 'SF Mono', 'Fira Code', monospace; }
+
+/* Badges */
+.badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+.badge-green { background: rgba(5,150,105,0.1); color: var(--green); }
+.badge-orange { background: rgba(217,119,6,0.1); color: var(--orange); }
+.badge-red { background: rgba(220,38,38,0.1); color: var(--red); }
+.badge-blue { background: rgba(0,102,204,0.1); color: var(--accent); }
+.badge-gray { background: rgba(156,163,175,0.15); color: var(--gray); }
+
+/* Details/Collapse */
+details { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; margin-bottom: 12px; }
+details summary { padding: 14px 20px; cursor: pointer; font-weight: 600; font-size: 15px; color: var(--text-primary); list-style: none; display: flex; align-items: center; gap: 8px; }
+details summary::before { content: '\25B6'; font-size: 10px; color: var(--text-secondary); transition: transform 0.2s; }
+details[open] summary::before { transform: rotate(90deg); }
+details summary::-webkit-details-marker { display: none; }
+details .detail-body { padding: 0 20px 20px; }
+
+/* Architecture diagram */
+.arch-diagram { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 24px 0; }
+.arch-row { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; justify-content: center; }
+.arch-box { background: var(--card-bg); border: 2px solid var(--card-border); border-radius: 8px; padding: 12px 20px; text-align: center; min-width: 140px; }
+.arch-box .arch-name { font-weight: 700; font-size: 14px; }
+.arch-box .arch-sub { font-size: 11px; color: var(--text-secondary); }
+.arch-box.model { border-color: var(--accent); }
+.arch-box.rules { border-color: var(--orange); }
+.arch-box.core { border-color: var(--green); }
+.arch-box.connectors { border-color: var(--red); }
+.arch-box.reporting { border-color: #7c3aed; }
+.arch-box.cli { border-color: var(--gray); }
+.arch-arrow { font-size: 20px; color: var(--text-secondary); }
+.arch-arrow-down { font-size: 20px; color: var(--text-secondary); }
+
+/* Data flow */
+.flow { display: flex; align-items: center; gap: 0; padding: 20px 0; flex-wrap: wrap; justify-content: center; }
+.flow-step { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 6px; padding: 10px 16px; font-size: 13px; font-weight: 600; white-space: nowrap; }
+.flow-arrow { color: var(--text-secondary); font-size: 18px; padding: 0 6px; }
+
+/* Bar chart */
+.bar-chart { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+.bar-row { display: flex; align-items: center; gap: 12px; }
+.bar-label { width: 90px; font-size: 13px; font-weight: 600; text-align: right; flex-shrink: 0; }
+.bar-track { flex: 1; background: rgba(110,118,129,0.08); border-radius: 4px; height: 28px; position: relative; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 10px; font-size: 12px; font-weight: 700; color: #fff; transition: width 0.6s ease; }
+.bar-fill.ux { background: var(--ux); }
+.bar-fill.capacity { background: var(--capacity); }
+.bar-fill.security { background: var(--security); }
+.bar-fill.resilience { background: var(--resilience); }
+
+/* Domain header pills */
+.domain-header { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 6px; font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+.domain-header.ux { background: rgba(0,102,204,0.08); color: var(--ux); }
+.domain-header.capacity { background: rgba(217,119,6,0.08); color: var(--capacity); }
+.domain-header.security { background: rgba(220,38,38,0.08); color: var(--security); }
+.domain-header.resilience { background: rgba(5,150,105,0.08); color: var(--resilience); }
+
+/* Interface signatures */
+.sig { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; line-height: 1.8; color: var(--text-secondary); }
+.sig .kw { color: #cf222e; }
+.sig .type { color: #0550ae; }
+.sig .iface { color: #8250df; }
+.sig .method { color: var(--text-primary); }
+.sig .prop { color: var(--text-primary); }
+
+/* Command workflow */
+.cmd-flow { display: flex; align-items: center; gap: 0; padding: 16px 0; flex-wrap: wrap; justify-content: center; }
+.cmd-step { background: rgba(0,102,204,0.06); border: 1px solid rgba(0,102,204,0.2); border-radius: 6px; padding: 8px 14px; font-size: 13px; font-weight: 600; color: var(--accent); font-family: 'SF Mono', 'Fira Code', monospace; }
+.cmd-arrow { color: var(--text-secondary); font-size: 16px; padding: 0 4px; }
+
+/* Security grid */
+.sec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+.sec-item { background: rgba(110,118,129,0.04); border: 1px solid var(--card-border); border-radius: 6px; padding: 16px; }
+.sec-item h4 { font-size: 14px; font-weight: 600; margin-bottom: 8px; color: var(--accent); }
+.sec-item p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+.sec-item code { background: rgba(110,118,129,0.15); padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .stats-ribbon { gap: 16px; }
+  .stat-value { font-size: 16px; }
+  .arch-row { flex-direction: column; }
+  .flow { flex-direction: column; }
+  .flow-arrow { transform: rotate(90deg); }
+  .sec-grid { grid-template-columns: 1fr; }
+  th, td { padding: 8px 6px; font-size: 13px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <div class="header-inner">
+    <h1>VDI Assessment Pack <span>v1.0.0</span></h1>
+    <div class="subtitle">.NET 8.0 &middot; C# 12 &middot; Automated VDI environment assessment tool</div>
+    <div class="stats-ribbon">
+      <div class="stat"><span class="stat-value">6</span><span class="stat-label">Projects</span></div>
+      <div class="stat"><span class="stat-value">30</span><span class="stat-label">Rules</span></div>
+      <div class="stat"><span class="stat-value">9</span><span class="stat-label">Commands</span></div>
+      <div class="stat"><span class="stat-value">158</span><span class="stat-label">Tests</span></div>
+      <div class="stat"><span class="stat-value">~7.4K</span><span class="stat-label">LOC</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="breadcrumb">
+  <a href="/vdi.html">&larr; Back to VDI Assessment</a>
+</div>
+
+<div class="container">
+
+<!-- ===== 1. ARCHITECTURE ===== -->
+<section>
+  <h2>Architecture</h2>
+
+  <details open>
+    <summary>Dependency Graph</summary>
+    <div class="detail-body">
+      <div class="arch-diagram">
+        <div class="arch-row">
+          <div class="arch-box model">
+            <div class="arch-name">VdiAssess.Model</div>
+            <div class="arch-sub">Entities, Interfaces, Enums</div>
+          </div>
+        </div>
+        <div class="arch-arrow-down">&darr;</div>
+        <div class="arch-row">
+          <div class="arch-box rules">
+            <div class="arch-name">VdiAssess.Rules</div>
+            <div class="arch-sub">30 Rules, RuleRunner, Scoring</div>
+          </div>
+          <div class="arch-box connectors">
+            <div class="arch-name">VdiAssess.Connectors.Citrix</div>
+            <div class="arch-sub">PowerShell, Mock, Mapper</div>
+          </div>
+        </div>
+        <div class="arch-arrow-down">&darr;</div>
+        <div class="arch-row">
+          <div class="arch-box core">
+            <div class="arch-name">VdiAssess.Core</div>
+            <div class="arch-sub">Orchestrators, SQLite, Locks, Secrets</div>
+          </div>
+        </div>
+        <div class="arch-arrow-down">&darr;</div>
+        <div class="arch-row">
+          <div class="arch-box reporting" style="border-color: #7c3aed;">
+            <div class="arch-name">VdiAssess.Reporting</div>
+            <div class="arch-sub">HTML &amp; PDF Renderers</div>
+          </div>
+        </div>
+        <div class="arch-arrow-down">&darr;</div>
+        <div class="arch-row">
+          <div class="arch-box cli">
+            <div class="arch-name">VdiAssess.Cli</div>
+            <div class="arch-sub">System.CommandLine, 9 Commands</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <details>
+    <summary>Project Breakdown (6 source + 2 test)</summary>
+    <div class="detail-body">
+      <table>
+        <thead>
+          <tr><th>Project</th><th>Files</th><th>Purpose</th><th>Key Classes</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>VdiAssess.Model</code></td>
+            <td>10</td>
+            <td>Domain entities, interfaces, enums</td>
+            <td>IConnector, ISecretsStore, IClock, AssessmentKey, FindingDomain</td>
+          </tr>
+          <tr>
+            <td><code>VdiAssess.Rules</code></td>
+            <td>34</td>
+            <td>Assessment rules engine</td>
+            <td>IRule, RuleRunner, ScoringEngine, DefaultRules, 30 rule classes</td>
+          </tr>
+          <tr>
+            <td><code>VdiAssess.Core</code></td>
+            <td>13</td>
+            <td>Orchestration, persistence, infrastructure</td>
+            <td>SnapshotOrchestrator, FileLockManager, DpapiSecretsStore, AuditLogger</td>
+          </tr>
+          <tr>
+            <td><code>VdiAssess.Connectors.Citrix</code></td>
+            <td>4</td>
+            <td>Citrix CVAD data collection</td>
+            <td>CitrixConnector, CitrixPowerShellRunner, MockConnector, CitrixMapper</td>
+          </tr>
+          <tr>
+            <td><code>VdiAssess.Reporting</code></td>
+            <td>4</td>
+            <td>Report generation (HTML + PDF)</td>
+            <td>IReportRenderer, HtmlReportRenderer, PdfReportRenderer, ReportDataBuilder</td>
+          </tr>
+          <tr>
+            <td><code>VdiAssess.Cli</code></td>
+            <td>10</td>
+            <td>CLI entry point and command handlers</td>
+            <td>Program, InitCommand, SnapshotCommand, SecretsCommand</td>
+          </tr>
+          <tr style="background: rgba(110,118,129,0.04);">
+            <td><code>VdiAssess.Tests</code></td>
+            <td>16</td>
+            <td>Unit tests (xUnit + FluentAssertions)</td>
+            <td>RuleTests, FileLockManagerTests, DpapiSecretsStoreTests</td>
+          </tr>
+          <tr style="background: rgba(110,118,129,0.04);">
+            <td><code>VdiAssess.IntegrationTests</code></td>
+            <td>5</td>
+            <td>End-to-end integration tests</td>
+            <td>SnapshotEndToEndTests, BaselineTests, ExportTests</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <details>
+    <summary>Data Flow Pipeline</summary>
+    <div class="detail-body">
+      <div class="flow">
+        <div class="flow-step">config.yaml</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">IConnector</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">SQLite</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">RuleRunner</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">Findings</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">HTML / PDF</div>
+      </div>
+      <p style="font-size: 13px; color: var(--text-secondary); text-align: center; margin-top: 8px;">
+        ConfigLoader parses YAML &rarr; Connector collects inventory + telemetry &rarr; SqliteRepository persists snapshots &rarr;
+        RuleRunner evaluates 30 rules against RuleContext &rarr; ScoringEngine grades by domain &rarr; Renderers produce reports
+      </p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Key Interfaces</summary>
+    <div class="detail-body">
+      <div class="card" style="margin-bottom: 12px;">
+        <h3>IConnector <span style="font-size: 12px; color: var(--text-secondary);">&mdash; VdiAssess.Model</span></h3>
+        <div class="sig">
+          <span class="kw">interface</span> <span class="iface">IConnector</span><br>
+          &nbsp;&nbsp;<span class="kw">string</span> <span class="prop">Platform</span> { <span class="kw">get</span>; }<br>
+          &nbsp;&nbsp;<span class="kw">string</span> <span class="prop">PlatformVariant</span> { <span class="kw">get</span>; }<br>
+          &nbsp;&nbsp;<span class="type">Task&lt;InventorySnapshot&gt;</span> <span class="method">CollectInventoryAsync</span>(<span class="type">ConnectorConfig</span>, <span class="type">CancellationToken</span>)<br>
+          &nbsp;&nbsp;<span class="type">Task&lt;TelemetryInterval&gt;</span> <span class="method">CollectTelemetryAsync</span>(<span class="type">ConnectorConfig</span>, <span class="type">DateTime</span>, <span class="type">DateTime</span>, <span class="kw">int</span>, <span class="type">CancellationToken</span>)
+        </div>
+        <p style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">Platform abstraction: CitrixConnector (PowerShell, Windows-only) or MockConnector (cross-platform dev/test)</p>
+      </div>
+      <div class="card" style="margin-bottom: 12px;">
+        <h3>ISecretsStore <span style="font-size: 12px; color: var(--text-secondary);">&mdash; VdiAssess.Model</span></h3>
+        <div class="sig">
+          <span class="kw">interface</span> <span class="iface">ISecretsStore</span><br>
+          &nbsp;&nbsp;<span class="kw">string</span>? <span class="method">Get</span>(<span class="kw">string</span> key)<br>
+          &nbsp;&nbsp;<span class="kw">void</span> <span class="method">Set</span>(<span class="kw">string</span> key, <span class="kw">string</span> value)<br>
+          &nbsp;&nbsp;<span class="kw">void</span> <span class="method">Delete</span>(<span class="kw">string</span> key)<br>
+          &nbsp;&nbsp;<span class="type">IReadOnlyList&lt;string&gt;</span> <span class="method">ListKeys</span>()
+        </div>
+        <p style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">Impl: DpapiSecretsStore &mdash; DPAPI encryption on Windows, base64 fallback for dev</p>
+      </div>
+      <div class="card" style="margin-bottom: 12px;">
+        <h3>IRule <span style="font-size: 12px; color: var(--text-secondary);">&mdash; VdiAssess.Rules</span></h3>
+        <div class="sig">
+          <span class="kw">interface</span> <span class="iface">IRule</span><br>
+          &nbsp;&nbsp;<span class="kw">string</span> <span class="prop">RuleId</span> { <span class="kw">get</span>; }<br>
+          &nbsp;&nbsp;<span class="kw">string</span> <span class="prop">RuleVersion</span> { <span class="kw">get</span>; }<br>
+          &nbsp;&nbsp;<span class="type">FindingDomain</span> <span class="prop">Domain</span> { <span class="kw">get</span>; }<br>
+          &nbsp;&nbsp;<span class="kw">string</span> <span class="prop">Description</span> { <span class="kw">get</span>; }<br>
+          &nbsp;&nbsp;<span class="type">IReadOnlyList&lt;Finding&gt;</span> <span class="method">Evaluate</span>(<span class="type">RuleContext</span>)
+        </div>
+        <p style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">RuleContext provides Controllers, Catalogs, DeliveryGroups, VDAs, PolicySettings, SessionBuckets, LogonBuckets, FailureBuckets</p>
+      </div>
+      <div class="card" style="margin-bottom: 12px;">
+        <h3>IReportRenderer <span style="font-size: 12px; color: var(--text-secondary);">&mdash; VdiAssess.Reporting</span></h3>
+        <div class="sig">
+          <span class="kw">interface</span> <span class="iface">IReportRenderer</span><br>
+          &nbsp;&nbsp;<span class="kw">string</span> <span class="prop">OutputFileName</span> { <span class="kw">get</span>; }<br>
+          &nbsp;&nbsp;<span class="kw">void</span> <span class="method">Render</span>(<span class="type">ReportData</span>, <span class="kw">string</span> outputPath)
+        </div>
+        <p style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">Impls: HtmlReportRenderer (self-contained HTML) and PdfReportRenderer (QuestPDF)</p>
+      </div>
+      <div class="card" style="margin-bottom: 12px;">
+        <h3>IScheduledTaskManager <span style="font-size: 12px; color: var(--text-secondary);">&mdash; VdiAssess.Core</span></h3>
+        <div class="sig">
+          <span class="kw">interface</span> <span class="iface">IScheduledTaskManager</span><br>
+          &nbsp;&nbsp;<span class="kw">void</span> <span class="method">CreateBaselineTask</span>(<span class="kw">string</span> runId, <span class="kw">string</span> configPath, <span class="kw">int</span> intervalMinutes)<br>
+          &nbsp;&nbsp;<span class="kw">void</span> <span class="method">RemoveBaselineTask</span>(<span class="kw">string</span> runId)<br>
+          &nbsp;&nbsp;<span class="kw">bool</span> <span class="method">TaskExists</span>(<span class="kw">string</span> runId)
+        </div>
+        <p style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">Impls: WindowsScheduledTaskManager (schtasks.exe) and NoopScheduledTaskManager (non-Windows)</p>
+      </div>
+      <div class="card">
+        <h3>IClock <span style="font-size: 12px; color: var(--text-secondary);">&mdash; VdiAssess.Model</span></h3>
+        <div class="sig">
+          <span class="kw">interface</span> <span class="iface">IClock</span><br>
+          &nbsp;&nbsp;<span class="type">DateTime</span> <span class="prop">UtcNow</span> { <span class="kw">get</span>; }
+        </div>
+        <p style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">Impls: SystemClock (production) and FakeClock (test, with Advance/Set methods for time manipulation)</p>
+      </div>
+    </div>
+  </details>
+</section>
+
+<!-- ===== 2. IMPLEMENTATION PHASES ===== -->
+<section>
+  <h2>Implementation Phases</h2>
+  <div class="card">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Phase</th><th>Description</th><th>Key Deliverables</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>0</td>
+          <td>Foundation</td>
+          <td>Solution scaffold, projects, CI-ready structure</td>
+          <td>8 csproj files, Directory.Build.props, .editorconfig</td>
+          <td><span class="badge badge-green">Complete</span></td>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>Domain Model</td>
+          <td>Core entities, enums, value objects</td>
+          <td>Entities, Buckets, Snapshots, Findings, RunInfo, Enums</td>
+          <td><span class="badge badge-green">Complete</span></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Interfaces &amp; Config</td>
+          <td>Abstractions and YAML configuration</td>
+          <td>IConnector, ISecretsStore, IClock, ConfigLoader, AssessmentKey</td>
+          <td><span class="badge badge-green">Complete</span></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Rules Engine</td>
+          <td>30 assessment rules across 4 domains</td>
+          <td>IRule, RuleRunner, ScoringEngine, 30 rule implementations</td>
+          <td><span class="badge badge-green">Complete</span></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Data Layer</td>
+          <td>SQLite persistence and file locking</td>
+          <td>SqliteRepository, SchemaBootstrap, FileLockManager, AuditLogger</td>
+          <td><span class="badge badge-green">Complete</span></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Connectors</td>
+          <td>Citrix CVAD data collection via PowerShell</td>
+          <td>CitrixConnector, CitrixPowerShellRunner, MockConnector, CitrixMapper</td>
+          <td><span class="badge badge-green">Complete</span></td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>Orchestration</td>
+          <td>Snapshot and baseline workflow orchestrators</td>
+          <td>SnapshotOrchestrator, BaselineOrchestrator, ValidateOrchestrator, RunManager</td>
+          <td><span class="badge badge-green">Complete</span></td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>Reporting</td>
+          <td>HTML and PDF report generation</td>
+          <td>HtmlReportRenderer, PdfReportRenderer, ReportDataBuilder</td>
+          <td><span class="badge badge-green">Complete</span></td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>CLI &amp; Secrets</td>
+          <td>System.CommandLine CLI with DPAPI secrets store</td>
+          <td>9 commands, DpapiSecretsStore, WindowsScheduledTaskManager</td>
+          <td><span class="badge badge-green">Complete</span></td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>Export &amp; Cleanup</td>
+          <td>ZIP export, manifest, cleanup with retention</td>
+          <td>ExportCommand, CleanupCommand, ManifestBuilder, LockClearCommand</td>
+          <td><span class="badge badge-green">Complete</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ===== 3. RULES ENGINE ===== -->
+<section>
+  <h2>Rules Engine (30 Rules)</h2>
+
+  <div class="card" style="margin-bottom: 20px;">
+    <h3>Domain Distribution</h3>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <div class="bar-label" style="color: var(--ux);">UX</div>
+        <div class="bar-track"><div class="bar-fill ux" style="width: 100%;">10 rules</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label" style="color: var(--capacity);">Capacity</div>
+        <div class="bar-track"><div class="bar-fill capacity" style="width: 90%;">9 rules</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label" style="color: var(--resilience);">Resilience</div>
+        <div class="bar-track"><div class="bar-fill resilience" style="width: 60%;">6 rules</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label" style="color: var(--security);">Security</div>
+        <div class="bar-track"><div class="bar-fill security" style="width: 50%;">5 rules</div></div>
+      </div>
+    </div>
+  </div>
+
+  <details>
+    <summary><span class="domain-header ux">UX &mdash; 10 rules</span></summary>
+    <div class="detail-body">
+      <table>
+        <thead><tr><th>Rule ID</th><th>Class</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>UX-AVG-LOGON</code></td><td>HighAvgLogonRule</td><td>Flags when the overall average logon duration exceeds threshold</td></tr>
+          <tr><td><code>UX-LOGON-P95</code></td><td>LogonP95Rule</td><td>Flags delivery groups where p95 logon duration exceeds threshold</td></tr>
+          <tr><td><code>UX-LOGON-P99</code></td><td>LogonP99Rule</td><td>Flags extreme logon outliers where p99 exceeds threshold</td></tr>
+          <tr><td><code>UX-PROFILE-LOAD</code></td><td>LogonProfileLoadRule</td><td>Flags when profile load phase dominates logon duration</td></tr>
+          <tr><td><code>UX-GPO-LOAD</code></td><td>LogonGpoRule</td><td>Flags when GPO processing phase is excessive during logon</td></tr>
+          <tr><td><code>UX-BROKER-RESPONSE</code></td><td>BrokerResponseTimeRule</td><td>Flags when broker response time contributes excessively to logon duration</td></tr>
+          <tr><td><code>UX-DISCONNECT-RATE</code></td><td>DisconnectRateRule</td><td>Flags elevated disconnect-to-reconnect ratios indicating session instability</td></tr>
+          <tr><td><code>UX-RECONNECT-RATE</code></td><td>HighReconnectRateRule</td><td>Flags elevated reconnection rates indicating network instability or client issues</td></tr>
+          <tr><td><code>UX-FAILURE-HOTSPOT</code></td><td>FailureHotspotRule</td><td>Flags delivery groups with elevated connection failure rates</td></tr>
+          <tr><td><code>UX-RECURRING-ERROR</code></td><td>RecurringErrorCodeRule</td><td>Flags when the same error code recurs across multiple telemetry buckets</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="domain-header capacity">Capacity &mdash; 9 rules</span></summary>
+    <div class="detail-body">
+      <table>
+        <thead><tr><th>Rule ID</th><th>Class</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>CAP-CONCURRENCY</code></td><td>ConcurrencyHeadroomRule</td><td>Flags when peak concurrent sessions approach available VDA capacity</td></tr>
+          <tr><td><code>CAP-EMPTY-DG</code></td><td>EmptyDeliveryGroupRule</td><td>Flags delivery groups with no associated VDAs</td></tr>
+          <tr><td><code>CAP-LARGE-DG</code></td><td>LargeDeliveryGroupRule</td><td>Flags delivery groups with a very large number of VDAs (blast radius concern)</td></tr>
+          <tr><td><code>CAP-SMALL-CATALOG</code></td><td>SmallCatalogRule</td><td>Flags catalogs with very few VDAs (potential consolidation opportunity)</td></tr>
+          <tr><td><code>CAP-POOL-IMBALANCE</code></td><td>PoolImbalanceRule</td><td>Flags delivery groups with significantly uneven VDA distribution across catalogs</td></tr>
+          <tr><td><code>CAP-OS-MIX</code></td><td>OsTypeHomogeneityRule</td><td>Flags delivery groups mixing desktop and server OS VDAs (unusual configuration)</td></tr>
+          <tr><td><code>CAP-SERVER-DENSITY</code></td><td>ServerOsDensityRule</td><td>Assesses session density on server OS VDAs for capacity planning</td></tr>
+          <tr><td><code>CAP-PROV-TYPE</code></td><td>McsProvisioningRule</td><td>Reports provisioning type distribution for capacity planning awareness</td></tr>
+          <tr><td><code>CAP-STATIC-MACHINES</code></td><td>StaticMachineTypeRule</td><td>Reports proportion of static (persistent) vs pooled VDAs for lifecycle management awareness</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="domain-header resilience">Resilience &mdash; 6 rules</span></summary>
+    <div class="detail-body">
+      <table>
+        <thead><tr><th>Rule ID</th><th>Class</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>RES-SINGLE-DDC</code></td><td>SingleControllerRule</td><td>Flags environments with only a single Delivery Controller (SPOF)</td></tr>
+          <tr><td><code>RES-DDC-VERSION</code></td><td>ControllerVersionMismatchRule</td><td>Flags when controllers have different roles that may indicate incomplete upgrades</td></tr>
+          <tr><td><code>RES-SINGLE-CATALOG</code></td><td>SingleCatalogRule</td><td>Flags delivery groups backed by a single machine catalog (SPOF for image updates)</td></tr>
+          <tr><td><code>RES-SESSION-RELIABILITY</code></td><td>SessionReliabilityRule</td><td>Flags when session reliability is not enabled</td></tr>
+          <tr><td><code>RES-NO-DG</code></td><td>NoDeliveryGroupsRule</td><td>Flags environments with no delivery groups configured</td></tr>
+          <tr><td><code>RES-NO-VDAS</code></td><td>NoVdasRule</td><td>Flags environments with no VDAs discovered</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="domain-header security">Security &mdash; 5 rules</span></summary>
+    <div class="detail-body">
+      <table>
+        <thead><tr><th>Rule ID</th><th>Class</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>SEC-USB</code></td><td>UsbRedirectionRule</td><td>Flags when USB redirection is enabled (malware introduction risk)</td></tr>
+          <tr><td><code>SEC-CLIPBOARD</code></td><td>ClientClipboardRedirectionRule</td><td>Flags when client clipboard redirection is enabled (data exfiltration risk)</td></tr>
+          <tr><td><code>SEC-CLIENT-DRIVE</code></td><td>ClientDriveRedirectionRule</td><td>Flags when client drive redirection is enabled (data exfiltration risk)</td></tr>
+          <tr><td><code>SEC-PRINTER</code></td><td>PrinterRedirectionRule</td><td>Flags when client printer redirection is enabled with auto-create (potential data exfiltration via print-to-file)</td></tr>
+          <tr><td><code>SEC-AUDIO-QUALITY</code></td><td>AudioRedirectionRule</td><td>Flags when audio quality is set to high, consuming excessive bandwidth</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+</section>
+
+<!-- ===== 4. CLI COMMANDS ===== -->
+<section>
+  <h2>CLI Commands (9)</h2>
+
+  <div class="card" style="margin-bottom: 16px;">
+    <h3>Workflow</h3>
+    <div class="cmd-flow">
+      <div class="cmd-step">init</div>
+      <div class="cmd-arrow">&rarr;</div>
+      <div class="cmd-step">validate</div>
+      <div class="cmd-arrow">&rarr;</div>
+      <div class="cmd-step">snapshot</div>
+      <div class="cmd-arrow">&rarr;</div>
+      <div class="cmd-step">report</div>
+      <div class="cmd-arrow">&rarr;</div>
+      <div class="cmd-step">export</div>
+      <div class="cmd-arrow">&rarr;</div>
+      <div class="cmd-step">cleanup</div>
+    </div>
+    <p style="font-size: 12px; color: var(--text-secondary); text-align: center;">
+      Optional: <code>baseline</code> (multi-interval collection) &middot; <code>secrets</code> (credential management) &middot; <code>lock-clear</code> (recovery)
+    </p>
+  </div>
+
+  <div class="card">
+    <table>
+      <thead><tr><th>Command</th><th>Description</th><th>Key Options</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>init</code></td>
+          <td>Generate starter config.yaml for an assessment</td>
+          <td><code>--output</code>, <code>--platform</code></td>
+        </tr>
+        <tr>
+          <td><code>validate</code></td>
+          <td>Validate config.yaml and test connectivity</td>
+          <td><code>--config</code></td>
+        </tr>
+        <tr>
+          <td><code>snapshot</code></td>
+          <td>Single-point assessment: collect, analyze, report</td>
+          <td><code>--config</code>, <code>--data-root</code>, <code>--mock</code></td>
+        </tr>
+        <tr>
+          <td><code>baseline</code></td>
+          <td>Multi-interval baseline collection over time</td>
+          <td><code>start</code>, <code>collect</code>, <code>finish</code> subcommands</td>
+        </tr>
+        <tr>
+          <td><code>report</code></td>
+          <td>Regenerate reports from existing run data</td>
+          <td><code>--run-id</code>, <code>--data-root</code></td>
+        </tr>
+        <tr>
+          <td><code>export</code></td>
+          <td>Package run artifacts into distributable ZIP</td>
+          <td><code>--run-id</code>, <code>--output</code></td>
+        </tr>
+        <tr>
+          <td><code>cleanup</code></td>
+          <td>Remove old runs based on retention policy</td>
+          <td><code>--older-than</code>, <code>--dry-run</code></td>
+        </tr>
+        <tr>
+          <td><code>lock-clear</code></td>
+          <td>Force-remove stale lock files</td>
+          <td><code>--assessment-key</code></td>
+        </tr>
+        <tr>
+          <td><code>secrets</code></td>
+          <td>Manage encrypted credentials (DPAPI)</td>
+          <td><code>set</code>, <code>get</code>, <code>list</code>, <code>delete</code> subcommands</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ===== 5. SECURITY ARCHITECTURE ===== -->
+<section>
+  <h2>Security Architecture</h2>
+
+  <div class="sec-grid">
+    <div class="sec-item">
+      <h4>Secrets Management</h4>
+      <p>
+        <code>DpapiSecretsStore</code> uses Windows DPAPI (<code>ProtectedData.Protect</code> via PowerShell interop) for
+        <code>CurrentUser</code>-scoped encryption. Falls back to base64 encoding on non-Windows (dev only).
+        Individual files per key in <code>secrets/</code> directory. Atomic writes via temp-then-rename.
+        Key validation prevents path traversal via <code>InvalidFileNameChars</code> check.
+      </p>
+    </div>
+    <div class="sec-item">
+      <h4>Assessment Key Derivation</h4>
+      <p>
+        SHA-256 hash of normalized JSON payload: <code>platform</code>, <code>variant</code>, <code>site_guid</code>,
+        sorted <code>controllers</code> (lowercased FQDNs), and sorted <code>scope</code> (include/exclude DG and catalog IDs).
+        Deterministic &mdash; same environment always produces the same key. Used for lock files, run directories, and audit correlation.
+      </p>
+    </div>
+    <div class="sec-item">
+      <h4>File Locking</h4>
+      <p>
+        <code>FileLockManager</code>: atomic acquire via <code>File.Move(overwrite: false)</code>, 60-second heartbeat timer,
+        5-minute stale threshold, 24-hour absolute timeout, PID validation on same host.
+        Supports async wait with configurable timeout. Lock files are JSON with assessment_key, run_id, PID, hostname, timestamps.
+      </p>
+    </div>
+    <div class="sec-item">
+      <h4>Audit Trail</h4>
+      <p>
+        <code>AuditLogger</code>: structured JSONL output with fields <code>ts_utc</code>, <code>level</code>, <code>event</code>,
+        <code>run_id</code>, <code>assessment_key</code>, <code>details</code>. Thread-safe via <code>lock</code>.
+        Levels: INFO, WARN, ERROR. All orchestrator lifecycle events logged.
+      </p>
+    </div>
+    <div class="sec-item">
+      <h4>Atomic Operations</h4>
+      <p>
+        Temp-then-rename pattern used across the codebase: <code>run.json</code> updates, lock file creation/heartbeat,
+        evidence CSV writes, secrets storage. Prevents partial-write corruption on crash or power loss.
+      </p>
+    </div>
+    <div class="sec-item">
+      <h4>Input Validation</h4>
+      <p>
+        Secret key names validated against <code>Path.GetInvalidFileNameChars()</code> (prevents path traversal).
+        PowerShell string escaping via single-quote doubling (<code>'</code> &rarr; <code>''</code>) in DPAPI interop.
+        Config validation via <code>ValidateOrchestrator</code> with 10 checks before any data collection.
+      </p>
+    </div>
+    <div class="sec-item">
+      <h4>Policy Rules</h4>
+      <p>
+        5 security rules inspect Citrix policy settings: USB redirection (malware vector), clipboard redirection (data exfiltration),
+        client drive mapping (data exfiltration), printer auto-create (print-to-file risk), and audio quality (bandwidth abuse).
+        Each maps to specific <code>PolicySetting</code> entries from the connector.
+      </p>
+    </div>
+    <div class="sec-item">
+      <h4>Connector Isolation</h4>
+      <p>
+        <code>CitrixConnector</code> checks <code>OperatingSystem.IsWindows()</code> and throws <code>PlatformNotSupportedException</code>
+        on non-Windows. PowerShell commands run as isolated child processes with <code>RedirectStandardOutput/Error</code>
+        and configurable timeout enforcement via <code>Process.WaitForExit</code>.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 6. TEST COVERAGE ===== -->
+<section>
+  <h2>Test Coverage</h2>
+
+  <div class="card" style="margin-bottom: 16px;">
+    <div style="display: flex; gap: 32px; flex-wrap: wrap; align-items: baseline;">
+      <div>
+        <span style="font-size: 36px; font-weight: 700; color: var(--green);">158</span>
+        <span style="color: var(--text-secondary); font-size: 14px; margin-left: 4px;">total tests</span>
+      </div>
+      <div>
+        <span style="font-size: 24px; font-weight: 700; color: var(--accent);">140</span>
+        <span style="color: var(--text-secondary); font-size: 13px; margin-left: 4px;">unit</span>
+      </div>
+      <div>
+        <span style="font-size: 24px; font-weight: 700; color: #7c3aed;">18</span>
+        <span style="color: var(--text-secondary); font-size: 13px; margin-left: 4px;">integration</span>
+      </div>
+      <div>
+        <span style="font-size: 24px; font-weight: 700; color: var(--green);">0</span>
+        <span style="color: var(--text-secondary); font-size: 13px; margin-left: 4px;">failures</span>
+      </div>
+    </div>
+  </div>
+
+  <details>
+    <summary>Test Breakdown by Category</summary>
+    <div class="detail-body">
+      <table>
+        <thead><tr><th>Category</th><th>Test File</th><th>Tests</th><th>Type</th></tr></thead>
+        <tbody>
+          <tr><td rowspan="2" style="font-weight:600; color: var(--orange);">Rules</td><td>RuleTests.cs</td><td>11</td><td>Unit</td></tr>
+          <tr><td>ExpandedRuleTests.cs</td><td>16</td><td>Unit</td></tr>
+          <tr><td rowspan="7" style="font-weight:600; color: var(--green);">Core Infra</td><td>FileLockManagerTests.cs</td><td>7</td><td>Unit</td></tr>
+          <tr><td>DpapiSecretsStoreTests.cs</td><td>13</td><td>Unit</td></tr>
+          <tr><td>ValidateOrchestratorTests.cs</td><td>10</td><td>Unit</td></tr>
+          <tr><td>SqliteRepositoryTests.cs</td><td>6</td><td>Unit</td></tr>
+          <tr><td>RunManagerTests.cs</td><td>5</td><td>Unit</td></tr>
+          <tr><td>ConfigLoaderTests.cs</td><td>2</td><td>Unit</td></tr>
+          <tr><td>ScheduledTaskManagerTests.cs</td><td>3</td><td>Unit</td></tr>
+          <tr><td rowspan="2" style="font-weight:600; color: #7c3aed;">Reporting</td><td>ReportTests.cs</td><td>9</td><td>Unit</td></tr>
+          <tr><td>PdfReportTests.cs</td><td>4</td><td>Unit</td></tr>
+          <tr><td rowspan="3" style="font-weight:600; color: var(--accent);">Model</td><td>CsvTests.cs</td><td>12</td><td>Unit</td></tr>
+          <tr><td>RunStatusTests.cs</td><td>26</td><td>Unit</td></tr>
+          <tr><td>AssessmentKeyTests.cs</td><td>2</td><td>Unit</td></tr>
+          <tr><td style="font-weight:600; color: var(--red);">Connectors</td><td>CitrixMapperTests.cs</td><td>12</td><td>Unit</td></tr>
+          <tr><td style="font-weight:600; color: var(--gray);">Smoke</td><td>SmokeTest.cs (unit)</td><td>1</td><td>Unit</td></tr>
+          <tr style="background: rgba(163,113,247,0.06);">
+            <td rowspan="5" style="font-weight:600; color: #7c3aed;">Integration</td><td>BaselineTests.cs</td><td>11</td><td>Integration</td></tr>
+          <tr style="background: rgba(163,113,247,0.06);"><td>ReportEndToEndTests.cs</td><td>3</td><td>Integration</td></tr>
+          <tr style="background: rgba(163,113,247,0.06);"><td>SnapshotEndToEndTests.cs</td><td>2</td><td>Integration</td></tr>
+          <tr style="background: rgba(163,113,247,0.06);"><td>ExportTests.cs</td><td>1</td><td>Integration</td></tr>
+          <tr style="background: rgba(163,113,247,0.06);"><td>SmokeTest.cs (integration)</td><td>1</td><td>Integration</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <details>
+    <summary>E2E Validation Results (Mock Connector)</summary>
+    <div class="detail-body">
+      <table>
+        <thead><tr><th>Scenario</th><th>Command</th><th>Result</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Version check</td>
+            <td><code>--version</code></td>
+            <td>Output: 1.0.0</td>
+            <td><span class="badge badge-green">Pass</span></td>
+          </tr>
+          <tr>
+            <td>Config generation</td>
+            <td><code>init</code></td>
+            <td>config.yaml generated with defaults</td>
+            <td><span class="badge badge-green">Pass</span></td>
+          </tr>
+          <tr>
+            <td>Snapshot assessment</td>
+            <td><code>snapshot --mock</code></td>
+            <td>30 rules ran, 7 findings, 4 scorecards, HTML + PDF</td>
+            <td><span class="badge badge-green">Pass</span></td>
+          </tr>
+          <tr>
+            <td>Report regeneration</td>
+            <td><code>report</code></td>
+            <td>HTML report regenerated from existing run</td>
+            <td><span class="badge badge-green">Pass</span></td>
+          </tr>
+          <tr>
+            <td>Export packaging</td>
+            <td><code>export</code></td>
+            <td>170KB ZIP with 13 files</td>
+            <td><span class="badge badge-green">Pass</span></td>
+          </tr>
+          <tr>
+            <td>Secrets CRUD</td>
+            <td><code>secrets set/get/list/delete</code></td>
+            <td>Full lifecycle verified</td>
+            <td><span class="badge badge-green">Pass</span></td>
+          </tr>
+          <tr>
+            <td>Cleanup dry-run</td>
+            <td><code>cleanup --dry-run</code></td>
+            <td>Detected eligible run, no deletion</td>
+            <td><span class="badge badge-green">Pass</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+</section>
+
+<!-- ===== 7. WHAT REMAINS ===== -->
+<section>
+  <h2>What Remains</h2>
+  <div class="card">
+    <table>
+      <thead><tr><th>Item</th><th>Detail</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Live Citrix testing</td>
+          <td>Requires Citrix CVAD SDK and a live Citrix environment for real PowerShell collection</td>
+          <td><span class="badge badge-red">Blocked</span></td>
+        </tr>
+        <tr>
+          <td>MSI installer build</td>
+          <td>Requires WiX Toolset v4 on Windows (<code>dotnet build -c Release</code>)</td>
+          <td><span class="badge badge-orange">Ready to build</span></td>
+        </tr>
+        <tr>
+          <td>Cross-compile for Windows</td>
+          <td><code>dotnet publish -r win-x64 --self-contained</code> produces single-file EXE</td>
+          <td><span class="badge badge-orange">Ready to build</span></td>
+        </tr>
+        <tr>
+          <td>DPAPI encryption on Windows</td>
+          <td>Base64 fallback working on Linux/macOS; real DPAPI encryption activates automatically on Windows</td>
+          <td><span class="badge badge-blue">Ready</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ===== 8. NUGET DEPENDENCIES ===== -->
+<section>
+  <h2>NuGet Dependencies</h2>
+  <div class="card">
+    <table>
+      <thead><tr><th>Package</th><th>Used By</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><code>System.CommandLine</code></td><td>Cli</td><td>CLI argument parsing and command routing</td></tr>
+        <tr><td><code>Microsoft.Extensions.DependencyInjection</code></td><td>Cli</td><td>Service container for DI</td></tr>
+        <tr><td><code>Microsoft.Extensions.Logging</code></td><td>Cli</td><td>Logging infrastructure</td></tr>
+        <tr><td><code>Microsoft.Extensions.Logging.Console</code></td><td>Cli</td><td>Console log output</td></tr>
+        <tr><td><code>Microsoft.Extensions.Logging.Abstractions</code></td><td>Model, Rules, Core, Connectors, Reporting</td><td>ILogger abstraction</td></tr>
+        <tr><td><code>Microsoft.Extensions.DependencyInjection.Abstractions</code></td><td>Core</td><td>DI abstractions</td></tr>
+        <tr><td><code>Microsoft.Data.Sqlite</code></td><td>Core</td><td>SQLite data persistence</td></tr>
+        <tr><td><code>YamlDotNet</code></td><td>Core</td><td>YAML configuration parsing</td></tr>
+        <tr><td><code>System.Security.Cryptography.ProtectedData</code></td><td>Core</td><td>Windows DPAPI support</td></tr>
+        <tr><td><code>QuestPDF</code></td><td>Reporting</td><td>PDF report generation</td></tr>
+        <tr style="background: rgba(110,118,129,0.04);"><td><code>xunit</code></td><td>Tests</td><td>Test framework</td></tr>
+        <tr style="background: rgba(110,118,129,0.04);"><td><code>FluentAssertions</code></td><td>Tests</td><td>Assertion library</td></tr>
+        <tr style="background: rgba(110,118,129,0.04);"><td><code>NSubstitute</code></td><td>Tests</td><td>Mocking framework</td></tr>
+        <tr style="background: rgba(110,118,129,0.04);"><td><code>coverlet.collector</code></td><td>Tests</td><td>Code coverage collection</td></tr>
+        <tr style="background: rgba(110,118,129,0.04);"><td><code>Microsoft.NET.Test.Sdk</code></td><td>Tests</td><td>Test SDK infrastructure</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</div>
+
+<footer style="text-align: center; padding: 32px; border-top: 1px solid var(--card-border); color: var(--text-secondary); font-size: 12px;">
+  &copy; 2026 Jinks Labs
+</footer>
+
+</body>
+</html>
