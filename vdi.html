@@ -220,77 +220,6 @@ details .detail-body {
   line-height: 1.6;
 }
 
-/* Timeline */
-.timeline {
-  position: relative;
-  padding-left: 24px;
-  border-left: 3px solid var(--card-border);
-}
-.timeline-phase {
-  position: relative;
-  margin-bottom: 32px;
-  padding-left: 28px;
-}
-.timeline-phase:last-child { margin-bottom: 0; }
-.timeline-dot {
-  position: absolute;
-  left: -35px;
-  top: 2px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 3px solid white;
-}
-.timeline-dot.p1 { background: #d32f2f; box-shadow: 0 0 0 2px #d32f2f; }
-.timeline-dot.p2 { background: #f57c00; box-shadow: 0 0 0 2px #f57c00; }
-.timeline-dot.p3 { background: #7cb342; box-shadow: 0 0 0 2px #7cb342; }
-.timeline-label {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-.timeline-label.p1 { color: #d32f2f; }
-.timeline-label.p2 { color: #f57c00; }
-.timeline-label.p3 { color: #7cb342; }
-.timeline-title {
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 6px;
-}
-.timeline-desc {
-  font-size: 14px;
-  color: #555;
-  line-height: 1.6;
-}
-
-/* Investment summary */
-.invest-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-top: 24px;
-}
-.invest-card {
-  background: var(--card-bg);
-  padding: 20px;
-  border-radius: 8px;
-  text-align: center;
-  border: 1px solid var(--card-border);
-}
-.invest-card .val {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-.invest-card .label {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin-top: 4px;
-}
-
 /* Link card */
 .link-card {
   display: block;
@@ -1091,6 +1020,72 @@ details.faq .detail-body a:hover {
               </div>
             </div>
 
+            <!-- Implementation Timeline -->
+            <div style="background: white; border-radius: 8px; padding: 28px 32px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+              <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; margin-bottom: 4px;">Engagement</div>
+              <div style="font-size: 20px; font-weight: 700; color: #1a1a2e; margin-bottom: 24px;">Remediation Timeline</div>
+
+              <div style="position: relative; padding-left: 24px; border-left: 3px solid #e0e0e0;">
+                <!-- Phase 1 -->
+                <div style="position: relative; margin-bottom: 28px; padding-left: 28px;">
+                  <div style="position: absolute; left: -35px; top: 2px; width: 20px; height: 20px; background: #d32f2f; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 0 2px #d32f2f;"></div>
+                  <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #d32f2f; font-weight: 700; margin-bottom: 4px;">Phase 1 &mdash; Weeks 1-3</div>
+                  <div style="font-size: 17px; font-weight: 700; color: #1a1a2e; margin-bottom: 6px;">Harden &amp; Protect</div>
+                  <div style="font-size: 13px; color: #555; line-height: 1.6;">
+                    <strong>ICA Policy Hardening</strong> (Week 1) &mdash; Disable drive/clipboard redirection. Zero cost, immediate risk reduction.<br>
+                    <strong>Controller HA</strong> (Weeks 2-3) &mdash; Deploy second DDC, configure SQL AG, validate failover.
+                  </div>
+                  <div style="margin-top: 8px; display: flex; gap: 20px; font-size: 12px;">
+                    <span style="color: #888;">Findings resolved: <strong style="color: #333;">3 of 7</strong></span>
+                    <span style="color: #888;">Score impact: <strong style="color: #4caf50;">Resilience 69&rarr;85, Security 84&rarr;100</strong></span>
+                  </div>
+                </div>
+                <!-- Phase 2 -->
+                <div style="position: relative; margin-bottom: 28px; padding-left: 28px;">
+                  <div style="position: absolute; left: -35px; top: 2px; width: 20px; height: 20px; background: #f57c00; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 0 2px #f57c00;"></div>
+                  <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #f57c00; font-weight: 700; margin-bottom: 4px;">Phase 2 &mdash; Weeks 4-7</div>
+                  <div style="font-size: 17px; font-weight: 700; color: #1a1a2e; margin-bottom: 6px;">Optimize &amp; Stabilize</div>
+                  <div style="font-size: 13px; color: #555; line-height: 1.6;">
+                    <strong>Logon Performance</strong> (Weeks 4-5) &mdash; Deploy FSLogix, prune GPOs, reschedule AV. Baseline with 7-day collection.<br>
+                    <strong>Canary Catalog</strong> (Weeks 6-7) &mdash; Split catalog, establish update pipeline, write rollback runbook.
+                  </div>
+                  <div style="margin-top: 8px; display: flex; gap: 20px; font-size: 12px;">
+                    <span style="color: #888;">Findings resolved: <strong style="color: #333;">5 of 7</strong></span>
+                    <span style="color: #888;">Score impact: <strong style="color: #4caf50;">UX 77&rarr;85, Resilience 85&rarr;93</strong></span>
+                  </div>
+                </div>
+                <!-- Phase 3 -->
+                <div style="position: relative; padding-left: 28px;">
+                  <div style="position: absolute; left: -35px; top: 2px; width: 20px; height: 20px; background: #7cb342; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 0 2px #7cb342;"></div>
+                  <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #7cb342; font-weight: 700; margin-bottom: 4px;">Phase 3 &mdash; Weeks 8-16</div>
+                  <div style="font-size: 17px; font-weight: 700; color: #1a1a2e; margin-bottom: 6px;">Modernize</div>
+                  <div style="font-size: 13px; color: #555; line-height: 1.6;">
+                    <strong>Desktop Modernization</strong> (Weeks 8-16) &mdash; Pilot pooled migration, restructure delivery groups by OS type, decommission static catalog.
+                  </div>
+                  <div style="margin-top: 8px; display: flex; gap: 20px; font-size: 12px;">
+                    <span style="color: #888;">Findings resolved: <strong style="color: #333;">7 of 7</strong></span>
+                    <span style="color: #888;">Score impact: <strong style="color: #4caf50;">All domains &ge;91</strong></span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Investment summary -->
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 28px;">
+                <div style="background: #f5f5f7; padding: 20px; border-radius: 6px; text-align: center;">
+                  <div style="font-size: 24px; font-weight: 700; color: #1a1a2e;">$180-290K</div>
+                  <div style="font-size: 12px; color: #888; margin-top: 4px;">Total estimated investment</div>
+                </div>
+                <div style="background: #f5f5f7; padding: 20px; border-radius: 6px; text-align: center;">
+                  <div style="font-size: 24px; font-weight: 700; color: #1a1a2e;">16 weeks</div>
+                  <div style="font-size: 12px; color: #888; margin-top: 4px;">Full roadmap duration</div>
+                </div>
+                <div style="background: #f5f5f7; padding: 20px; border-radius: 6px; text-align: center;">
+                  <div style="font-size: 24px; font-weight: 700; color: #4caf50;">7 / 7</div>
+                  <div style="font-size: 12px; color: #888; margin-top: 4px;">Findings resolved</div>
+                </div>
+              </div>
+            </div>
+
           </div>
 
           <!-- Slide Footer -->
@@ -1101,57 +1096,6 @@ details.faq .detail-body a:hover {
         </div>
       </div>
     </details>
-  </div>
-
-  <!-- ===== ENGAGEMENT TIMELINE ===== -->
-  <div class="section">
-    <p class="section-label">Engagement</p>
-    <h2 class="section-title">Remediation Timeline</h2>
-    <p class="section-desc">A phased approach that prioritizes immediate risk reduction, then optimizes performance and resilience, then modernizes the platform.</p>
-
-    <div class="timeline">
-      <div class="timeline-phase">
-        <div class="timeline-dot p1"></div>
-        <div class="timeline-label p1">Phase 1 &mdash; Weeks 1-3</div>
-        <div class="timeline-title">Harden &amp; Protect</div>
-        <div class="timeline-desc">
-          <strong>ICA Policy Hardening</strong> (Week 1) &mdash; Disable drive/clipboard redirection. Zero cost, immediate risk reduction.<br>
-          <strong>Controller HA</strong> (Weeks 2-3) &mdash; Deploy second DDC, configure SQL AG, validate failover.
-        </div>
-      </div>
-      <div class="timeline-phase">
-        <div class="timeline-dot p2"></div>
-        <div class="timeline-label p2">Phase 2 &mdash; Weeks 4-7</div>
-        <div class="timeline-title">Optimize &amp; Stabilize</div>
-        <div class="timeline-desc">
-          <strong>Logon Performance</strong> (Weeks 4-5) &mdash; Deploy FSLogix, prune GPOs, reschedule AV. Baseline with 7-day collection.<br>
-          <strong>Canary Catalog</strong> (Weeks 6-7) &mdash; Split catalog, establish update pipeline, write rollback runbook.
-        </div>
-      </div>
-      <div class="timeline-phase">
-        <div class="timeline-dot p3"></div>
-        <div class="timeline-label p3">Phase 3 &mdash; Weeks 8-16</div>
-        <div class="timeline-title">Modernize</div>
-        <div class="timeline-desc">
-          <strong>Desktop Modernization</strong> (Weeks 8-16) &mdash; Pilot pooled migration, restructure delivery groups by OS type, decommission static catalog.
-        </div>
-      </div>
-    </div>
-
-    <div class="invest-grid">
-      <div class="invest-card">
-        <div class="val">$180-290K</div>
-        <div class="label">Total estimated investment</div>
-      </div>
-      <div class="invest-card">
-        <div class="val">16 weeks</div>
-        <div class="label">Full roadmap duration</div>
-      </div>
-      <div class="invest-card">
-        <div class="val" style="color: var(--green);">7 / 7</div>
-        <div class="label">Findings resolved</div>
-      </div>
-    </div>
   </div>
 
   <!-- ===== FAQ ===== -->
