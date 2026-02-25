@@ -336,6 +336,42 @@ details .detail-body {
 .pill-green { background: rgba(5,150,105,0.1); color: var(--green); }
 .pill-gray { background: rgba(156,163,175,0.15); color: #9ca3af; }
 
+/* FAQ */
+.faq-group {
+  margin-bottom: 28px;
+}
+.faq-group:last-child { margin-bottom: 0; }
+.faq-category {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--accent);
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--card-border);
+}
+details.faq {
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+details.faq summary {
+  padding: 14px 20px;
+  font-size: 15px;
+}
+details.faq .detail-body p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+details.faq .detail-body a {
+  color: var(--accent);
+  text-decoration: none;
+}
+details.faq .detail-body a:hover {
+  text-decoration: underline;
+}
+
 /* Footer */
 .footer {
   text-align: center;
@@ -1115,6 +1151,141 @@ details .detail-body {
         <div class="val" style="color: var(--green);">7 / 7</div>
         <div class="label">Findings resolved</div>
       </div>
+    </div>
+  </div>
+
+  <!-- ===== FAQ ===== -->
+  <div class="section">
+    <p class="section-label">Questions</p>
+    <h2 class="section-title">Frequently Asked Questions</h2>
+
+    <div class="faq-group">
+      <p class="faq-category">Security &amp; Data Handling</p>
+
+      <details class="faq">
+        <summary>Does any data leave the client network?</summary>
+        <div class="detail-body">
+          <p>No. The tool runs entirely on-premises with no outbound network calls. All collected data, analysis results, and reports are written to a local directory on the machine where the tool is executed. The evidence bundle (ZIP) is handed to the client &mdash; nothing is uploaded, phoned home, or transmitted externally.</p>
+        </div>
+      </details>
+
+      <details class="faq">
+        <summary>What credentials are required?</summary>
+        <div class="detail-body">
+          <p>The tool needs read-only access to the Citrix PowerShell SDK &mdash; specifically, a domain account with the <strong>Citrix Read-Only Administrator</strong> role on the Delivery Controller. No domain admin, local admin, or write access is required. Credentials are encrypted at rest using Windows DPAPI (CurrentUser scope) and are never stored in plaintext.</p>
+        </div>
+      </details>
+
+      <details class="faq">
+        <summary>How are credentials stored?</summary>
+        <div class="detail-body">
+          <p>The built-in secrets store uses Windows Data Protection API (DPAPI) to encrypt each credential individually, scoped to the current user profile on the current machine. Credentials cannot be decrypted by other users or on other machines. They are stored as individual encrypted files &mdash; not in config files, environment variables, or registry keys.</p>
+        </div>
+      </details>
+
+      <details class="faq">
+        <summary>Can we review the tool before running it?</summary>
+        <div class="detail-body">
+          <p>Yes. The tool is a self-contained .NET 8 executable with no runtime dependencies beyond the Citrix PowerShell SDK. We provide the full source code, architecture documentation, and a mock connector that lets your team run the complete assessment pipeline against synthetic data before touching production. The <a href="/architecture.html">architecture page</a> documents every interface, rule, and data flow.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="faq-group">
+      <p class="faq-category">Performance &amp; Impact</p>
+
+      <details class="faq">
+        <summary>Does the tool impact production VDI performance?</summary>
+        <div class="detail-body">
+          <p>Impact is minimal. The tool issues read-only PowerShell commands against the Delivery Controller &mdash; the same queries that Citrix Director and Studio use. It does not install agents on VDAs, modify Citrix configuration, or generate synthetic load. Telemetry collection queries historical data from the controller's monitoring database, not real-time session data.</p>
+        </div>
+      </details>
+
+      <details class="faq">
+        <summary>How long does an assessment take to run?</summary>
+        <div class="detail-body">
+          <p>A <strong>Snapshot</strong> assessment typically completes in 2-5 minutes depending on environment size (number of VDAs, delivery groups, and historical telemetry depth). A <strong>Baseline</strong> assessment collects telemetry at scheduled intervals over 7+ days to capture usage patterns across business hours, weekends, and month-end peaks &mdash; individual collection runs take under a minute each.</p>
+        </div>
+      </details>
+
+      <details class="faq">
+        <summary>What is the difference between Snapshot and Baseline?</summary>
+        <div class="detail-body">
+          <p><strong>Snapshot</strong> is a point-in-time assessment: one collection, one analysis, one report. It captures the current state of the environment and is ideal for initial discovery or quick health checks.</p>
+          <p style="margin-top: 8px;"><strong>Baseline</strong> collects telemetry at regular intervals (e.g., every 60 minutes) over 7 or more days, then analyzes the full dataset. This captures concurrency patterns, peak hours, weekend differences, and intermittent issues that a single snapshot would miss. Baseline is the recommended tier for environments going into remediation planning.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="faq-group">
+      <p class="faq-category">Methodology &amp; Rules</p>
+
+      <details class="faq">
+        <summary>How are severity scores calculated?</summary>
+        <div class="detail-body">
+          <p>Each domain (UX, Capacity, Security, Resilience) starts at 100 and loses points per finding based on severity: Critical (-25), High (-15), Medium (-8), Low (-3). The scoring engine also factors in confidence level and the number of affected resources. Domain scores below 70 are flagged as requiring immediate attention.</p>
+        </div>
+      </details>
+
+      <details class="faq">
+        <summary>What if a rule doesn't apply to our environment?</summary>
+        <div class="detail-body">
+          <p>Rules are self-gating: each rule checks whether the required data exists before evaluating. For example, the server OS density rule only fires if server OS VDAs are present, and session telemetry rules only fire if telemetry buckets contain data. Rules that find no applicable data produce no findings &mdash; they don't generate false positives or "not applicable" noise.</p>
+        </div>
+      </details>
+
+      <details class="faq">
+        <summary>Can we customize the rules or thresholds?</summary>
+        <div class="detail-body">
+          <p>The current release uses curated thresholds based on Citrix best practices and field experience (e.g., 45-second average logon, 15% concurrency headroom). Custom threshold configuration is on the roadmap. In the meantime, findings include the measured value alongside the threshold so your team can apply their own judgment to borderline cases.</p>
+        </div>
+      </details>
+
+      <details class="faq">
+        <summary>What does the evidence bundle contain?</summary>
+        <div class="detail-body">
+          <p>The exported ZIP includes: HTML report, PDF report, raw inventory CSVs (controllers, catalogs, delivery groups, VDAs), telemetry CSVs (sessions, logons, failures), policy settings export, the scored findings as structured data, a JSONL audit trail of every action the tool took, and a manifest with file checksums. This gives your team full traceability from raw data to final recommendations.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="faq-group">
+      <p class="faq-category">Deployment &amp; Prerequisites</p>
+
+      <details class="faq">
+        <summary>What are the prerequisites?</summary>
+        <div class="detail-body">
+          <p>The tool requires:</p>
+          <ul style="margin: 8px 0 0 18px; color: var(--text-secondary); line-height: 1.8; font-size: 14px;">
+            <li><strong>Windows 10/11 or Server 2019+</strong> (for DPAPI and PowerShell support)</li>
+            <li><strong>Citrix PowerShell SDK</strong> (installed with Citrix Studio or standalone)</li>
+            <li><strong>Network access</strong> to at least one Delivery Controller</li>
+            <li><strong>Read-only Citrix admin role</strong> on the target site</li>
+          </ul>
+          <p style="margin-top: 8px;">No .NET runtime installation is required &mdash; the tool ships as a self-contained executable.</p>
+        </div>
+      </details>
+
+      <details class="faq">
+        <summary>Does it require agents on the VDAs?</summary>
+        <div class="detail-body">
+          <p>No. The tool collects all data through the Citrix Delivery Controller's PowerShell SDK. It queries the controller for inventory (catalogs, delivery groups, VDA registrations) and telemetry (session counts, logon durations, failure events). Nothing is installed on, deployed to, or executed on individual VDAs.</p>
+        </div>
+      </details>
+
+      <details class="faq">
+        <summary>What platforms are supported?</summary>
+        <div class="detail-body">
+          <p><strong>Citrix Virtual Apps &amp; Desktops (CVAD)</strong> is fully supported in v1, including both on-premises and Citrix Cloud deployments that expose the PowerShell SDK. <strong>VMware Horizon</strong> and <strong>Azure Virtual Desktop (AVD)</strong> connectors are planned for future releases &mdash; the tool's architecture uses a connector abstraction layer specifically designed for multi-platform support.</p>
+        </div>
+      </details>
+
+      <details class="faq">
+        <summary>Can it run on a jumpbox or management server?</summary>
+        <div class="detail-body">
+          <p>Yes, and that's the recommended deployment. Run the tool from any Windows machine that has the Citrix PowerShell SDK installed and network connectivity to the Delivery Controller. A Citrix admin jumpbox or the controller itself both work. The tool writes output to a local <code style="background: rgba(110,118,129,0.15); padding: 1px 5px; border-radius: 3px; font-size: 13px;">data/</code> directory relative to the working directory.</p>
+        </div>
+      </details>
     </div>
   </div>
 
