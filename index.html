@@ -3,1554 +3,234 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VDI Assessment Pack — Project Summary</title>
+<title>Jinks Labs — Assessment Packs</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg: #0d1117; --card-bg: #161b22; --card-border: #30363d;
-  --text-primary: #e6edf3; --text-secondary: #8b949e;
-  --accent: #58a6ff; --red: #f85149; --orange: #d29922;
-  --gray: #8b949e; --green: #3fb950;
-  --ux: #58a6ff; --capacity: #d29922; --security: #f85149; --resilience: #3fb950;
+body {
+  background: #fff;
+  color: #1a1a2e;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  font-size: 16px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
-body { background: var(--bg); color: var(--text-primary); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; line-height: 1.6; font-size: 15px; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 24px 80px; }
 
 /* Header */
-.header { background: linear-gradient(135deg, #161b22 0%, #0d1117 100%); border-bottom: 1px solid var(--card-border); padding: 32px 0; margin-bottom: 32px; }
-.header-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-.header h1 { font-size: 28px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
-.header h1 span { color: var(--accent); }
-.header .subtitle { color: var(--text-secondary); font-size: 14px; margin-bottom: 16px; }
-.stats-ribbon { display: flex; gap: 24px; flex-wrap: wrap; }
-.stat { display: flex; align-items: baseline; gap: 6px; }
-.stat-value { font-size: 20px; font-weight: 700; color: var(--accent); }
-.stat-label { font-size: 13px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+.header {
+  background: linear-gradient(135deg, #0066cc 0%, #004a99 100%);
+  color: #fff;
+  padding: 48px 24px 44px;
+  text-align: center;
+}
+.header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+.header .subtitle {
+  font-size: 16px;
+  color: rgba(255,255,255,0.85);
+  font-weight: 400;
+  max-width: 520px;
+  margin: 0 auto;
+}
 
-/* Sections */
-section { margin-bottom: 32px; }
-section > h2 { font-size: 20px; font-weight: 600; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--card-border); }
-.card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 20px; margin-bottom: 16px; }
-.card h3 { font-size: 16px; font-weight: 600; margin-bottom: 12px; color: var(--text-primary); }
+/* Main */
+.main {
+  flex: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+  width: 100%;
+}
+.section-label {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #6b7280;
+  margin-bottom: 20px;
+}
 
-/* Tables */
-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--card-border); }
-th { color: var(--text-secondary); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; background: rgba(110,118,129,0.04); }
-td { color: var(--text-primary); }
-tr:last-child td { border-bottom: none; }
-td code, th code { background: rgba(110,118,129,0.15); padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: 'SF Mono', 'Fira Code', monospace; }
+/* Card grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+/* Cards */
+.card {
+  background: #f8f9fa;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 28px 24px;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-live {
+  border-left: 4px solid #0066cc;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.card-live:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,102,204,0.12);
+  border-color: #0066cc;
+}
+.card-live:hover .card-title { color: #0066cc; }
+.card-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  user-select: none;
+}
+
+/* Card content */
+.card-icon {
+  width: 44px;
+  height: 44px;
+  margin-bottom: 16px;
+  color: #0066cc;
+}
+.card-disabled .card-icon { color: #9ca3af; }
+.card-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  transition: color 0.2s ease;
+}
+.card-desc {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
 
 /* Badges */
-.badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
-.badge-green { background: rgba(63,185,80,0.15); color: var(--green); }
-.badge-orange { background: rgba(210,153,34,0.15); color: var(--orange); }
-.badge-red { background: rgba(248,81,73,0.15); color: var(--red); }
-.badge-blue { background: rgba(88,166,255,0.15); color: var(--accent); }
-.badge-gray { background: rgba(139,148,158,0.15); color: var(--gray); }
+.badge {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+.badge-live {
+  background: #ecfdf5;
+  color: #059669;
+}
+.badge-soon {
+  background: #f3f4f6;
+  color: #9ca3af;
+}
 
-/* Details/Collapse */
-details { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; margin-bottom: 12px; }
-details summary { padding: 14px 20px; cursor: pointer; font-weight: 600; font-size: 15px; color: var(--text-primary); list-style: none; display: flex; align-items: center; gap: 8px; }
-details summary::before { content: '\25B6'; font-size: 10px; color: var(--text-secondary); transition: transform 0.2s; }
-details[open] summary::before { transform: rotate(90deg); }
-details summary::-webkit-details-marker { display: none; }
-details .detail-body { padding: 0 20px 20px; }
-
-/* Architecture diagram */
-.arch-diagram { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 24px 0; }
-.arch-row { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; justify-content: center; }
-.arch-box { background: var(--card-bg); border: 2px solid var(--card-border); border-radius: 8px; padding: 12px 20px; text-align: center; min-width: 140px; }
-.arch-box .arch-name { font-weight: 700; font-size: 14px; }
-.arch-box .arch-sub { font-size: 11px; color: var(--text-secondary); }
-.arch-box.model { border-color: var(--accent); }
-.arch-box.rules { border-color: var(--orange); }
-.arch-box.core { border-color: var(--green); }
-.arch-box.connectors { border-color: var(--red); }
-.arch-box.reporting { border-color: #a371f7; }
-.arch-box.cli { border-color: var(--gray); }
-.arch-arrow { font-size: 20px; color: var(--text-secondary); }
-.arch-arrow-down { font-size: 20px; color: var(--text-secondary); }
-
-/* Data flow */
-.flow { display: flex; align-items: center; gap: 0; padding: 20px 0; flex-wrap: wrap; justify-content: center; }
-.flow-step { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 6px; padding: 10px 16px; font-size: 13px; font-weight: 600; white-space: nowrap; }
-.flow-arrow { color: var(--text-secondary); font-size: 18px; padding: 0 6px; }
-
-/* Bar chart */
-.bar-chart { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
-.bar-row { display: flex; align-items: center; gap: 12px; }
-.bar-label { width: 90px; font-size: 13px; font-weight: 600; text-align: right; flex-shrink: 0; }
-.bar-track { flex: 1; background: rgba(110,118,129,0.08); border-radius: 4px; height: 28px; position: relative; overflow: hidden; }
-.bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 10px; font-size: 12px; font-weight: 700; color: #fff; transition: width 0.6s ease; }
-.bar-fill.ux { background: var(--ux); }
-.bar-fill.capacity { background: var(--capacity); }
-.bar-fill.security { background: var(--security); }
-.bar-fill.resilience { background: var(--resilience); }
-
-/* Domain header pills */
-.domain-header { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 6px; font-size: 13px; font-weight: 700; margin-bottom: 8px; }
-.domain-header.ux { background: rgba(88,166,255,0.12); color: var(--ux); }
-.domain-header.capacity { background: rgba(210,153,34,0.12); color: var(--capacity); }
-.domain-header.security { background: rgba(248,81,73,0.12); color: var(--security); }
-.domain-header.resilience { background: rgba(63,185,80,0.12); color: var(--resilience); }
-
-/* Interface signatures */
-.sig { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; line-height: 1.8; color: var(--text-secondary); }
-.sig .kw { color: #ff7b72; }
-.sig .type { color: #79c0ff; }
-.sig .iface { color: #d2a8ff; }
-.sig .method { color: var(--text-primary); }
-.sig .prop { color: var(--text-primary); }
-
-/* Command workflow */
-.cmd-flow { display: flex; align-items: center; gap: 0; padding: 16px 0; flex-wrap: wrap; justify-content: center; }
-.cmd-step { background: rgba(88,166,255,0.08); border: 1px solid rgba(88,166,255,0.25); border-radius: 6px; padding: 8px 14px; font-size: 13px; font-weight: 600; color: var(--accent); font-family: 'SF Mono', 'Fira Code', monospace; }
-.cmd-arrow { color: var(--text-secondary); font-size: 16px; padding: 0 4px; }
-
-/* Security grid */
-.sec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
-.sec-item { background: rgba(110,118,129,0.04); border: 1px solid var(--card-border); border-radius: 6px; padding: 16px; }
-.sec-item h4 { font-size: 14px; font-weight: 600; margin-bottom: 8px; color: var(--accent); }
-.sec-item p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
-.sec-item code { background: rgba(110,118,129,0.15); padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 24px;
+  font-size: 13px;
+  color: #9ca3af;
+  border-top: 1px solid #f3f4f6;
+}
 
 /* Responsive */
-@media (max-width: 768px) {
-  .stats-ribbon { gap: 16px; }
-  .stat-value { font-size: 16px; }
-  .arch-row { flex-direction: column; }
-  .flow { flex-direction: column; }
-  .flow-arrow { transform: rotate(90deg); }
-  .sec-grid { grid-template-columns: 1fr; }
-  th, td { padding: 8px 6px; font-size: 13px; }
+@media (max-width: 900px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 580px) {
+  .grid { grid-template-columns: 1fr; }
+  .header { padding: 36px 20px 32px; }
+  .header h1 { font-size: 26px; }
+  .main { padding: 32px 16px 60px; }
 }
 </style>
 </head>
 <body>
 
-<!-- ===== HEADER ===== -->
-<div class="header">
-  <div class="header-inner">
-    <h1>VDI Assessment Pack <span>v1.0.0</span></h1>
-    <div class="subtitle">.NET 8.0 &middot; C# 12 &middot; Automated VDI environment assessment tool</div>
-    <div class="stats-ribbon">
-      <div class="stat"><span class="stat-value">6</span><span class="stat-label">Projects</span></div>
-      <div class="stat"><span class="stat-value">30</span><span class="stat-label">Rules</span></div>
-      <div class="stat"><span class="stat-value">9</span><span class="stat-label">Commands</span></div>
-      <div class="stat"><span class="stat-value">158</span><span class="stat-label">Tests</span></div>
-      <div class="stat"><span class="stat-value">~7.4K</span><span class="stat-label">LOC</span></div>
-    </div>
-  </div>
-</div>
+<header class="header">
+  <h1>Jinks Labs &mdash; Assessment Packs</h1>
+  <p class="subtitle">IT infrastructure assessment tools for enterprise environments</p>
+</header>
 
-<div class="container">
+<main class="main">
+  <p class="section-label">Available Packs</p>
+  <div class="grid">
 
-<!-- ===== 1. ARCHITECTURE ===== -->
-<section>
-  <h2>Architecture</h2>
-
-  <details open>
-    <summary>Dependency Graph</summary>
-    <div class="detail-body">
-      <div class="arch-diagram">
-        <div class="arch-row">
-          <div class="arch-box model">
-            <div class="arch-name">VdiAssess.Model</div>
-            <div class="arch-sub">Entities, Interfaces, Enums</div>
-          </div>
-        </div>
-        <div class="arch-arrow-down">&darr;</div>
-        <div class="arch-row">
-          <div class="arch-box rules">
-            <div class="arch-name">VdiAssess.Rules</div>
-            <div class="arch-sub">30 Rules, RuleRunner, Scoring</div>
-          </div>
-          <div class="arch-box connectors">
-            <div class="arch-name">VdiAssess.Connectors.Citrix</div>
-            <div class="arch-sub">PowerShell, Mock, Mapper</div>
-          </div>
-        </div>
-        <div class="arch-arrow-down">&darr;</div>
-        <div class="arch-row">
-          <div class="arch-box core">
-            <div class="arch-name">VdiAssess.Core</div>
-            <div class="arch-sub">Orchestrators, SQLite, Locks, Secrets</div>
-          </div>
-        </div>
-        <div class="arch-arrow-down">&darr;</div>
-        <div class="arch-row">
-          <div class="arch-box reporting" style="border-color: #a371f7;">
-            <div class="arch-name">VdiAssess.Reporting</div>
-            <div class="arch-sub">HTML &amp; PDF Renderers</div>
-          </div>
-        </div>
-        <div class="arch-arrow-down">&darr;</div>
-        <div class="arch-row">
-          <div class="arch-box cli">
-            <div class="arch-name">VdiAssess.Cli</div>
-            <div class="arch-sub">System.CommandLine, 9 Commands</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </details>
-
-  <details>
-    <summary>Project Breakdown (6 source + 2 test)</summary>
-    <div class="detail-body">
-      <table>
-        <thead>
-          <tr><th>Project</th><th>Files</th><th>Purpose</th><th>Key Classes</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>VdiAssess.Model</code></td>
-            <td>10</td>
-            <td>Domain entities, interfaces, enums</td>
-            <td>IConnector, ISecretsStore, IClock, AssessmentKey, FindingDomain</td>
-          </tr>
-          <tr>
-            <td><code>VdiAssess.Rules</code></td>
-            <td>34</td>
-            <td>Assessment rules engine</td>
-            <td>IRule, RuleRunner, ScoringEngine, DefaultRules, 30 rule classes</td>
-          </tr>
-          <tr>
-            <td><code>VdiAssess.Core</code></td>
-            <td>13</td>
-            <td>Orchestration, persistence, infrastructure</td>
-            <td>SnapshotOrchestrator, FileLockManager, DpapiSecretsStore, AuditLogger</td>
-          </tr>
-          <tr>
-            <td><code>VdiAssess.Connectors.Citrix</code></td>
-            <td>4</td>
-            <td>Citrix CVAD data collection</td>
-            <td>CitrixConnector, CitrixPowerShellRunner, MockConnector, CitrixMapper</td>
-          </tr>
-          <tr>
-            <td><code>VdiAssess.Reporting</code></td>
-            <td>4</td>
-            <td>Report generation (HTML + PDF)</td>
-            <td>IReportRenderer, HtmlReportRenderer, PdfReportRenderer, ReportDataBuilder</td>
-          </tr>
-          <tr>
-            <td><code>VdiAssess.Cli</code></td>
-            <td>10</td>
-            <td>CLI entry point and command handlers</td>
-            <td>Program, InitCommand, SnapshotCommand, SecretsCommand</td>
-          </tr>
-          <tr style="background: rgba(110,118,129,0.04);">
-            <td><code>VdiAssess.Tests</code></td>
-            <td>16</td>
-            <td>Unit tests (xUnit + FluentAssertions)</td>
-            <td>RuleTests, FileLockManagerTests, DpapiSecretsStoreTests</td>
-          </tr>
-          <tr style="background: rgba(110,118,129,0.04);">
-            <td><code>VdiAssess.IntegrationTests</code></td>
-            <td>5</td>
-            <td>End-to-end integration tests</td>
-            <td>SnapshotEndToEndTests, BaselineTests, ExportTests</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </details>
-
-  <details>
-    <summary>Data Flow Pipeline</summary>
-    <div class="detail-body">
-      <div class="flow">
-        <div class="flow-step">config.yaml</div>
-        <div class="flow-arrow">&rarr;</div>
-        <div class="flow-step">IConnector</div>
-        <div class="flow-arrow">&rarr;</div>
-        <div class="flow-step">SQLite</div>
-        <div class="flow-arrow">&rarr;</div>
-        <div class="flow-step">RuleRunner</div>
-        <div class="flow-arrow">&rarr;</div>
-        <div class="flow-step">Findings</div>
-        <div class="flow-arrow">&rarr;</div>
-        <div class="flow-step">HTML / PDF</div>
-      </div>
-      <p style="font-size: 13px; color: var(--text-secondary); text-align: center; margin-top: 8px;">
-        ConfigLoader parses YAML &rarr; Connector collects inventory + telemetry &rarr; SqliteRepository persists snapshots &rarr;
-        RuleRunner evaluates 30 rules against RuleContext &rarr; ScoringEngine grades by domain &rarr; Renderers produce reports
-      </p>
-    </div>
-  </details>
-
-  <details>
-    <summary>Key Interfaces</summary>
-    <div class="detail-body">
-      <div class="card" style="margin-bottom: 12px;">
-        <h3>IConnector <span style="font-size: 12px; color: var(--text-secondary);">&mdash; VdiAssess.Model</span></h3>
-        <div class="sig">
-          <span class="kw">interface</span> <span class="iface">IConnector</span><br>
-          &nbsp;&nbsp;<span class="kw">string</span> <span class="prop">Platform</span> { <span class="kw">get</span>; }<br>
-          &nbsp;&nbsp;<span class="kw">string</span> <span class="prop">PlatformVariant</span> { <span class="kw">get</span>; }<br>
-          &nbsp;&nbsp;<span class="type">Task&lt;InventorySnapshot&gt;</span> <span class="method">CollectInventoryAsync</span>(<span class="type">ConnectorConfig</span>, <span class="type">CancellationToken</span>)<br>
-          &nbsp;&nbsp;<span class="type">Task&lt;TelemetryInterval&gt;</span> <span class="method">CollectTelemetryAsync</span>(<span class="type">ConnectorConfig</span>, <span class="type">DateTime</span>, <span class="type">DateTime</span>, <span class="kw">int</span>, <span class="type">CancellationToken</span>)
-        </div>
-        <p style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">Platform abstraction: CitrixConnector (PowerShell, Windows-only) or MockConnector (cross-platform dev/test)</p>
-      </div>
-      <div class="card" style="margin-bottom: 12px;">
-        <h3>ISecretsStore <span style="font-size: 12px; color: var(--text-secondary);">&mdash; VdiAssess.Model</span></h3>
-        <div class="sig">
-          <span class="kw">interface</span> <span class="iface">ISecretsStore</span><br>
-          &nbsp;&nbsp;<span class="kw">string</span>? <span class="method">Get</span>(<span class="kw">string</span> key)<br>
-          &nbsp;&nbsp;<span class="kw">void</span> <span class="method">Set</span>(<span class="kw">string</span> key, <span class="kw">string</span> value)<br>
-          &nbsp;&nbsp;<span class="kw">void</span> <span class="method">Delete</span>(<span class="kw">string</span> key)<br>
-          &nbsp;&nbsp;<span class="type">IReadOnlyList&lt;string&gt;</span> <span class="method">ListKeys</span>()
-        </div>
-        <p style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">Impl: DpapiSecretsStore &mdash; DPAPI encryption on Windows, base64 fallback for dev</p>
-      </div>
-      <div class="card" style="margin-bottom: 12px;">
-        <h3>IRule <span style="font-size: 12px; color: var(--text-secondary);">&mdash; VdiAssess.Rules</span></h3>
-        <div class="sig">
-          <span class="kw">interface</span> <span class="iface">IRule</span><br>
-          &nbsp;&nbsp;<span class="kw">string</span> <span class="prop">RuleId</span> { <span class="kw">get</span>; }<br>
-          &nbsp;&nbsp;<span class="kw">string</span> <span class="prop">RuleVersion</span> { <span class="kw">get</span>; }<br>
-          &nbsp;&nbsp;<span class="type">FindingDomain</span> <span class="prop">Domain</span> { <span class="kw">get</span>; }<br>
-          &nbsp;&nbsp;<span class="kw">string</span> <span class="prop">Description</span> { <span class="kw">get</span>; }<br>
-          &nbsp;&nbsp;<span class="type">IReadOnlyList&lt;Finding&gt;</span> <span class="method">Evaluate</span>(<span class="type">RuleContext</span>)
-        </div>
-        <p style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">RuleContext provides Controllers, Catalogs, DeliveryGroups, VDAs, PolicySettings, SessionBuckets, LogonBuckets, FailureBuckets</p>
-      </div>
-      <div class="card" style="margin-bottom: 12px;">
-        <h3>IReportRenderer <span style="font-size: 12px; color: var(--text-secondary);">&mdash; VdiAssess.Reporting</span></h3>
-        <div class="sig">
-          <span class="kw">interface</span> <span class="iface">IReportRenderer</span><br>
-          &nbsp;&nbsp;<span class="kw">string</span> <span class="prop">OutputFileName</span> { <span class="kw">get</span>; }<br>
-          &nbsp;&nbsp;<span class="kw">void</span> <span class="method">Render</span>(<span class="type">ReportData</span>, <span class="kw">string</span> outputPath)
-        </div>
-        <p style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">Impls: HtmlReportRenderer (self-contained HTML) and PdfReportRenderer (QuestPDF)</p>
-      </div>
-      <div class="card" style="margin-bottom: 12px;">
-        <h3>IScheduledTaskManager <span style="font-size: 12px; color: var(--text-secondary);">&mdash; VdiAssess.Core</span></h3>
-        <div class="sig">
-          <span class="kw">interface</span> <span class="iface">IScheduledTaskManager</span><br>
-          &nbsp;&nbsp;<span class="kw">void</span> <span class="method">CreateBaselineTask</span>(<span class="kw">string</span> runId, <span class="kw">string</span> configPath, <span class="kw">int</span> intervalMinutes)<br>
-          &nbsp;&nbsp;<span class="kw">void</span> <span class="method">RemoveBaselineTask</span>(<span class="kw">string</span> runId)<br>
-          &nbsp;&nbsp;<span class="kw">bool</span> <span class="method">TaskExists</span>(<span class="kw">string</span> runId)
-        </div>
-        <p style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">Impls: WindowsScheduledTaskManager (schtasks.exe) and NoopScheduledTaskManager (non-Windows)</p>
-      </div>
-      <div class="card">
-        <h3>IClock <span style="font-size: 12px; color: var(--text-secondary);">&mdash; VdiAssess.Model</span></h3>
-        <div class="sig">
-          <span class="kw">interface</span> <span class="iface">IClock</span><br>
-          &nbsp;&nbsp;<span class="type">DateTime</span> <span class="prop">UtcNow</span> { <span class="kw">get</span>; }
-        </div>
-        <p style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">Impls: SystemClock (production) and FakeClock (test, with Advance/Set methods for time manipulation)</p>
-      </div>
-    </div>
-  </details>
-</section>
-
-<!-- ===== 2. IMPLEMENTATION PHASES ===== -->
-<section>
-  <h2>Implementation Phases</h2>
-  <div class="card">
-    <table>
-      <thead>
-        <tr><th>#</th><th>Phase</th><th>Description</th><th>Key Deliverables</th><th>Status</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>0</td>
-          <td>Foundation</td>
-          <td>Solution scaffold, projects, CI-ready structure</td>
-          <td>8 csproj files, Directory.Build.props, .editorconfig</td>
-          <td><span class="badge badge-green">Complete</span></td>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>Domain Model</td>
-          <td>Core entities, enums, value objects</td>
-          <td>Entities, Buckets, Snapshots, Findings, RunInfo, Enums</td>
-          <td><span class="badge badge-green">Complete</span></td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Interfaces &amp; Config</td>
-          <td>Abstractions and YAML configuration</td>
-          <td>IConnector, ISecretsStore, IClock, ConfigLoader, AssessmentKey</td>
-          <td><span class="badge badge-green">Complete</span></td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>Rules Engine</td>
-          <td>30 assessment rules across 4 domains</td>
-          <td>IRule, RuleRunner, ScoringEngine, 30 rule implementations</td>
-          <td><span class="badge badge-green">Complete</span></td>
-        </tr>
-        <tr>
-          <td>4</td>
-          <td>Data Layer</td>
-          <td>SQLite persistence and file locking</td>
-          <td>SqliteRepository, SchemaBootstrap, FileLockManager, AuditLogger</td>
-          <td><span class="badge badge-green">Complete</span></td>
-        </tr>
-        <tr>
-          <td>5</td>
-          <td>Connectors</td>
-          <td>Citrix CVAD data collection via PowerShell</td>
-          <td>CitrixConnector, CitrixPowerShellRunner, MockConnector, CitrixMapper</td>
-          <td><span class="badge badge-green">Complete</span></td>
-        </tr>
-        <tr>
-          <td>6</td>
-          <td>Orchestration</td>
-          <td>Snapshot and baseline workflow orchestrators</td>
-          <td>SnapshotOrchestrator, BaselineOrchestrator, ValidateOrchestrator, RunManager</td>
-          <td><span class="badge badge-green">Complete</span></td>
-        </tr>
-        <tr>
-          <td>7</td>
-          <td>Reporting</td>
-          <td>HTML and PDF report generation</td>
-          <td>HtmlReportRenderer, PdfReportRenderer, ReportDataBuilder</td>
-          <td><span class="badge badge-green">Complete</span></td>
-        </tr>
-        <tr>
-          <td>8</td>
-          <td>CLI &amp; Secrets</td>
-          <td>System.CommandLine CLI with DPAPI secrets store</td>
-          <td>9 commands, DpapiSecretsStore, WindowsScheduledTaskManager</td>
-          <td><span class="badge badge-green">Complete</span></td>
-        </tr>
-        <tr>
-          <td>9</td>
-          <td>Export &amp; Cleanup</td>
-          <td>ZIP export, manifest, cleanup with retention</td>
-          <td>ExportCommand, CleanupCommand, ManifestBuilder, LockClearCommand</td>
-          <td><span class="badge badge-green">Complete</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</section>
-
-<!-- ===== 3. RULES ENGINE ===== -->
-<section>
-  <h2>Rules Engine (30 Rules)</h2>
-
-  <div class="card" style="margin-bottom: 20px;">
-    <h3>Domain Distribution</h3>
-    <div class="bar-chart">
-      <div class="bar-row">
-        <div class="bar-label" style="color: var(--ux);">UX</div>
-        <div class="bar-track"><div class="bar-fill ux" style="width: 100%;">10 rules</div></div>
-      </div>
-      <div class="bar-row">
-        <div class="bar-label" style="color: var(--capacity);">Capacity</div>
-        <div class="bar-track"><div class="bar-fill capacity" style="width: 90%;">9 rules</div></div>
-      </div>
-      <div class="bar-row">
-        <div class="bar-label" style="color: var(--resilience);">Resilience</div>
-        <div class="bar-track"><div class="bar-fill resilience" style="width: 60%;">6 rules</div></div>
-      </div>
-      <div class="bar-row">
-        <div class="bar-label" style="color: var(--security);">Security</div>
-        <div class="bar-track"><div class="bar-fill security" style="width: 50%;">5 rules</div></div>
-      </div>
-    </div>
-  </div>
-
-  <details>
-    <summary><span class="domain-header ux">UX &mdash; 10 rules</span></summary>
-    <div class="detail-body">
-      <table>
-        <thead><tr><th>Rule ID</th><th>Class</th><th>Description</th></tr></thead>
-        <tbody>
-          <tr><td><code>UX-AVG-LOGON</code></td><td>HighAvgLogonRule</td><td>Flags when the overall average logon duration exceeds threshold</td></tr>
-          <tr><td><code>UX-LOGON-P95</code></td><td>LogonP95Rule</td><td>Flags delivery groups where p95 logon duration exceeds threshold</td></tr>
-          <tr><td><code>UX-LOGON-P99</code></td><td>LogonP99Rule</td><td>Flags extreme logon outliers where p99 exceeds threshold</td></tr>
-          <tr><td><code>UX-PROFILE-LOAD</code></td><td>LogonProfileLoadRule</td><td>Flags when profile load phase dominates logon duration</td></tr>
-          <tr><td><code>UX-GPO-LOAD</code></td><td>LogonGpoRule</td><td>Flags when GPO processing phase is excessive during logon</td></tr>
-          <tr><td><code>UX-BROKER-RESPONSE</code></td><td>BrokerResponseTimeRule</td><td>Flags when broker response time contributes excessively to logon duration</td></tr>
-          <tr><td><code>UX-DISCONNECT-RATE</code></td><td>DisconnectRateRule</td><td>Flags elevated disconnect-to-reconnect ratios indicating session instability</td></tr>
-          <tr><td><code>UX-RECONNECT-RATE</code></td><td>HighReconnectRateRule</td><td>Flags elevated reconnection rates indicating network instability or client issues</td></tr>
-          <tr><td><code>UX-FAILURE-HOTSPOT</code></td><td>FailureHotspotRule</td><td>Flags delivery groups with elevated connection failure rates</td></tr>
-          <tr><td><code>UX-RECURRING-ERROR</code></td><td>RecurringErrorCodeRule</td><td>Flags when the same error code recurs across multiple telemetry buckets</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </details>
-
-  <details>
-    <summary><span class="domain-header capacity">Capacity &mdash; 9 rules</span></summary>
-    <div class="detail-body">
-      <table>
-        <thead><tr><th>Rule ID</th><th>Class</th><th>Description</th></tr></thead>
-        <tbody>
-          <tr><td><code>CAP-CONCURRENCY</code></td><td>ConcurrencyHeadroomRule</td><td>Flags when peak concurrent sessions approach available VDA capacity</td></tr>
-          <tr><td><code>CAP-EMPTY-DG</code></td><td>EmptyDeliveryGroupRule</td><td>Flags delivery groups with no associated VDAs</td></tr>
-          <tr><td><code>CAP-LARGE-DG</code></td><td>LargeDeliveryGroupRule</td><td>Flags delivery groups with a very large number of VDAs (blast radius concern)</td></tr>
-          <tr><td><code>CAP-SMALL-CATALOG</code></td><td>SmallCatalogRule</td><td>Flags catalogs with very few VDAs (potential consolidation opportunity)</td></tr>
-          <tr><td><code>CAP-POOL-IMBALANCE</code></td><td>PoolImbalanceRule</td><td>Flags delivery groups with significantly uneven VDA distribution across catalogs</td></tr>
-          <tr><td><code>CAP-OS-MIX</code></td><td>OsTypeHomogeneityRule</td><td>Flags delivery groups mixing desktop and server OS VDAs (unusual configuration)</td></tr>
-          <tr><td><code>CAP-SERVER-DENSITY</code></td><td>ServerOsDensityRule</td><td>Assesses session density on server OS VDAs for capacity planning</td></tr>
-          <tr><td><code>CAP-PROV-TYPE</code></td><td>McsProvisioningRule</td><td>Reports provisioning type distribution for capacity planning awareness</td></tr>
-          <tr><td><code>CAP-STATIC-MACHINES</code></td><td>StaticMachineTypeRule</td><td>Reports proportion of static (persistent) vs pooled VDAs for lifecycle management awareness</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </details>
-
-  <details>
-    <summary><span class="domain-header resilience">Resilience &mdash; 6 rules</span></summary>
-    <div class="detail-body">
-      <table>
-        <thead><tr><th>Rule ID</th><th>Class</th><th>Description</th></tr></thead>
-        <tbody>
-          <tr><td><code>RES-SINGLE-DDC</code></td><td>SingleControllerRule</td><td>Flags environments with only a single Delivery Controller (SPOF)</td></tr>
-          <tr><td><code>RES-DDC-VERSION</code></td><td>ControllerVersionMismatchRule</td><td>Flags when controllers have different roles that may indicate incomplete upgrades</td></tr>
-          <tr><td><code>RES-SINGLE-CATALOG</code></td><td>SingleCatalogRule</td><td>Flags delivery groups backed by a single machine catalog (SPOF for image updates)</td></tr>
-          <tr><td><code>RES-SESSION-RELIABILITY</code></td><td>SessionReliabilityRule</td><td>Flags when session reliability is not enabled</td></tr>
-          <tr><td><code>RES-NO-DG</code></td><td>NoDeliveryGroupsRule</td><td>Flags environments with no delivery groups configured</td></tr>
-          <tr><td><code>RES-NO-VDAS</code></td><td>NoVdasRule</td><td>Flags environments with no VDAs discovered</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </details>
-
-  <details>
-    <summary><span class="domain-header security">Security &mdash; 5 rules</span></summary>
-    <div class="detail-body">
-      <table>
-        <thead><tr><th>Rule ID</th><th>Class</th><th>Description</th></tr></thead>
-        <tbody>
-          <tr><td><code>SEC-USB</code></td><td>UsbRedirectionRule</td><td>Flags when USB redirection is enabled (malware introduction risk)</td></tr>
-          <tr><td><code>SEC-CLIPBOARD</code></td><td>ClientClipboardRedirectionRule</td><td>Flags when client clipboard redirection is enabled (data exfiltration risk)</td></tr>
-          <tr><td><code>SEC-CLIENT-DRIVE</code></td><td>ClientDriveRedirectionRule</td><td>Flags when client drive redirection is enabled (data exfiltration risk)</td></tr>
-          <tr><td><code>SEC-PRINTER</code></td><td>PrinterRedirectionRule</td><td>Flags when client printer redirection is enabled with auto-create (potential data exfiltration via print-to-file)</td></tr>
-          <tr><td><code>SEC-AUDIO-QUALITY</code></td><td>AudioRedirectionRule</td><td>Flags when audio quality is set to high, consuming excessive bandwidth</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </details>
-</section>
-
-<!-- ===== 4. CLI COMMANDS ===== -->
-<section>
-  <h2>CLI Commands (9)</h2>
-
-  <div class="card" style="margin-bottom: 16px;">
-    <h3>Workflow</h3>
-    <div class="cmd-flow">
-      <div class="cmd-step">init</div>
-      <div class="cmd-arrow">&rarr;</div>
-      <div class="cmd-step">validate</div>
-      <div class="cmd-arrow">&rarr;</div>
-      <div class="cmd-step">snapshot</div>
-      <div class="cmd-arrow">&rarr;</div>
-      <div class="cmd-step">report</div>
-      <div class="cmd-arrow">&rarr;</div>
-      <div class="cmd-step">export</div>
-      <div class="cmd-arrow">&rarr;</div>
-      <div class="cmd-step">cleanup</div>
-    </div>
-    <p style="font-size: 12px; color: var(--text-secondary); text-align: center;">
-      Optional: <code>baseline</code> (multi-interval collection) &middot; <code>secrets</code> (credential management) &middot; <code>lock-clear</code> (recovery)
-    </p>
-  </div>
-
-  <div class="card">
-    <table>
-      <thead><tr><th>Command</th><th>Description</th><th>Key Options</th></tr></thead>
-      <tbody>
-        <tr>
-          <td><code>init</code></td>
-          <td>Generate starter config.yaml for an assessment</td>
-          <td><code>--output</code>, <code>--platform</code></td>
-        </tr>
-        <tr>
-          <td><code>validate</code></td>
-          <td>Validate config.yaml and test connectivity</td>
-          <td><code>--config</code></td>
-        </tr>
-        <tr>
-          <td><code>snapshot</code></td>
-          <td>Single-point assessment: collect, analyze, report</td>
-          <td><code>--config</code>, <code>--data-root</code>, <code>--mock</code></td>
-        </tr>
-        <tr>
-          <td><code>baseline</code></td>
-          <td>Multi-interval baseline collection over time</td>
-          <td><code>start</code>, <code>collect</code>, <code>finish</code> subcommands</td>
-        </tr>
-        <tr>
-          <td><code>report</code></td>
-          <td>Regenerate reports from existing run data</td>
-          <td><code>--run-id</code>, <code>--data-root</code></td>
-        </tr>
-        <tr>
-          <td><code>export</code></td>
-          <td>Package run artifacts into distributable ZIP</td>
-          <td><code>--run-id</code>, <code>--output</code></td>
-        </tr>
-        <tr>
-          <td><code>cleanup</code></td>
-          <td>Remove old runs based on retention policy</td>
-          <td><code>--older-than</code>, <code>--dry-run</code></td>
-        </tr>
-        <tr>
-          <td><code>lock-clear</code></td>
-          <td>Force-remove stale lock files</td>
-          <td><code>--assessment-key</code></td>
-        </tr>
-        <tr>
-          <td><code>secrets</code></td>
-          <td>Manage encrypted credentials (DPAPI)</td>
-          <td><code>set</code>, <code>get</code>, <code>list</code>, <code>delete</code> subcommands</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</section>
-
-<!-- ===== 5. SECURITY ARCHITECTURE ===== -->
-<section>
-  <h2>Security Architecture</h2>
-
-  <div class="sec-grid">
-    <div class="sec-item">
-      <h4>Secrets Management</h4>
-      <p>
-        <code>DpapiSecretsStore</code> uses Windows DPAPI (<code>ProtectedData.Protect</code> via PowerShell interop) for
-        <code>CurrentUser</code>-scoped encryption. Falls back to base64 encoding on non-Windows (dev only).
-        Individual files per key in <code>secrets/</code> directory. Atomic writes via temp-then-rename.
-        Key validation prevents path traversal via <code>InvalidFileNameChars</code> check.
-      </p>
-    </div>
-    <div class="sec-item">
-      <h4>Assessment Key Derivation</h4>
-      <p>
-        SHA-256 hash of normalized JSON payload: <code>platform</code>, <code>variant</code>, <code>site_guid</code>,
-        sorted <code>controllers</code> (lowercased FQDNs), and sorted <code>scope</code> (include/exclude DG and catalog IDs).
-        Deterministic &mdash; same environment always produces the same key. Used for lock files, run directories, and audit correlation.
-      </p>
-    </div>
-    <div class="sec-item">
-      <h4>File Locking</h4>
-      <p>
-        <code>FileLockManager</code>: atomic acquire via <code>File.Move(overwrite: false)</code>, 60-second heartbeat timer,
-        5-minute stale threshold, 24-hour absolute timeout, PID validation on same host.
-        Supports async wait with configurable timeout. Lock files are JSON with assessment_key, run_id, PID, hostname, timestamps.
-      </p>
-    </div>
-    <div class="sec-item">
-      <h4>Audit Trail</h4>
-      <p>
-        <code>AuditLogger</code>: structured JSONL output with fields <code>ts_utc</code>, <code>level</code>, <code>event</code>,
-        <code>run_id</code>, <code>assessment_key</code>, <code>details</code>. Thread-safe via <code>lock</code>.
-        Levels: INFO, WARN, ERROR. All orchestrator lifecycle events logged.
-      </p>
-    </div>
-    <div class="sec-item">
-      <h4>Atomic Operations</h4>
-      <p>
-        Temp-then-rename pattern used across the codebase: <code>run.json</code> updates, lock file creation/heartbeat,
-        evidence CSV writes, secrets storage. Prevents partial-write corruption on crash or power loss.
-      </p>
-    </div>
-    <div class="sec-item">
-      <h4>Input Validation</h4>
-      <p>
-        Secret key names validated against <code>Path.GetInvalidFileNameChars()</code> (prevents path traversal).
-        PowerShell string escaping via single-quote doubling (<code>'</code> &rarr; <code>''</code>) in DPAPI interop.
-        Config validation via <code>ValidateOrchestrator</code> with 10 checks before any data collection.
-      </p>
-    </div>
-    <div class="sec-item">
-      <h4>Policy Rules</h4>
-      <p>
-        5 security rules inspect Citrix policy settings: USB redirection (malware vector), clipboard redirection (data exfiltration),
-        client drive mapping (data exfiltration), printer auto-create (print-to-file risk), and audio quality (bandwidth abuse).
-        Each maps to specific <code>PolicySetting</code> entries from the connector.
-      </p>
-    </div>
-    <div class="sec-item">
-      <h4>Connector Isolation</h4>
-      <p>
-        <code>CitrixConnector</code> checks <code>OperatingSystem.IsWindows()</code> and throws <code>PlatformNotSupportedException</code>
-        on non-Windows. PowerShell commands run as isolated child processes with <code>RedirectStandardOutput/Error</code>
-        and configurable timeout enforcement via <code>Process.WaitForExit</code>.
-      </p>
-    </div>
-  </div>
-</section>
-
-<!-- ===== 6. TEST COVERAGE ===== -->
-<section>
-  <h2>Test Coverage</h2>
-
-  <div class="card" style="margin-bottom: 16px;">
-    <div style="display: flex; gap: 32px; flex-wrap: wrap; align-items: baseline;">
-      <div>
-        <span style="font-size: 36px; font-weight: 700; color: var(--green);">158</span>
-        <span style="color: var(--text-secondary); font-size: 14px; margin-left: 4px;">total tests</span>
-      </div>
-      <div>
-        <span style="font-size: 24px; font-weight: 700; color: var(--accent);">140</span>
-        <span style="color: var(--text-secondary); font-size: 13px; margin-left: 4px;">unit</span>
-      </div>
-      <div>
-        <span style="font-size: 24px; font-weight: 700; color: #a371f7;">18</span>
-        <span style="color: var(--text-secondary); font-size: 13px; margin-left: 4px;">integration</span>
-      </div>
-      <div>
-        <span style="font-size: 24px; font-weight: 700; color: var(--green);">0</span>
-        <span style="color: var(--text-secondary); font-size: 13px; margin-left: 4px;">failures</span>
-      </div>
-    </div>
-  </div>
-
-  <details>
-    <summary>Test Breakdown by Category</summary>
-    <div class="detail-body">
-      <table>
-        <thead><tr><th>Category</th><th>Test File</th><th>Tests</th><th>Type</th></tr></thead>
-        <tbody>
-          <tr><td rowspan="2" style="font-weight:600; color: var(--orange);">Rules</td><td>RuleTests.cs</td><td>11</td><td>Unit</td></tr>
-          <tr><td>ExpandedRuleTests.cs</td><td>16</td><td>Unit</td></tr>
-          <tr><td rowspan="7" style="font-weight:600; color: var(--green);">Core Infra</td><td>FileLockManagerTests.cs</td><td>7</td><td>Unit</td></tr>
-          <tr><td>DpapiSecretsStoreTests.cs</td><td>13</td><td>Unit</td></tr>
-          <tr><td>ValidateOrchestratorTests.cs</td><td>10</td><td>Unit</td></tr>
-          <tr><td>SqliteRepositoryTests.cs</td><td>6</td><td>Unit</td></tr>
-          <tr><td>RunManagerTests.cs</td><td>5</td><td>Unit</td></tr>
-          <tr><td>ConfigLoaderTests.cs</td><td>2</td><td>Unit</td></tr>
-          <tr><td>ScheduledTaskManagerTests.cs</td><td>3</td><td>Unit</td></tr>
-          <tr><td rowspan="2" style="font-weight:600; color: #a371f7;">Reporting</td><td>ReportTests.cs</td><td>9</td><td>Unit</td></tr>
-          <tr><td>PdfReportTests.cs</td><td>4</td><td>Unit</td></tr>
-          <tr><td rowspan="3" style="font-weight:600; color: var(--accent);">Model</td><td>CsvTests.cs</td><td>12</td><td>Unit</td></tr>
-          <tr><td>RunStatusTests.cs</td><td>26</td><td>Unit</td></tr>
-          <tr><td>AssessmentKeyTests.cs</td><td>2</td><td>Unit</td></tr>
-          <tr><td style="font-weight:600; color: var(--red);">Connectors</td><td>CitrixMapperTests.cs</td><td>12</td><td>Unit</td></tr>
-          <tr><td style="font-weight:600; color: var(--gray);">Smoke</td><td>SmokeTest.cs (unit)</td><td>1</td><td>Unit</td></tr>
-          <tr style="background: rgba(163,113,247,0.06);">
-            <td rowspan="5" style="font-weight:600; color: #a371f7;">Integration</td><td>BaselineTests.cs</td><td>11</td><td>Integration</td></tr>
-          <tr style="background: rgba(163,113,247,0.06);"><td>ReportEndToEndTests.cs</td><td>3</td><td>Integration</td></tr>
-          <tr style="background: rgba(163,113,247,0.06);"><td>SnapshotEndToEndTests.cs</td><td>2</td><td>Integration</td></tr>
-          <tr style="background: rgba(163,113,247,0.06);"><td>ExportTests.cs</td><td>1</td><td>Integration</td></tr>
-          <tr style="background: rgba(163,113,247,0.06);"><td>SmokeTest.cs (integration)</td><td>1</td><td>Integration</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </details>
-
-  <details>
-    <summary>E2E Validation Results (Mock Connector)</summary>
-    <div class="detail-body">
-      <table>
-        <thead><tr><th>Scenario</th><th>Command</th><th>Result</th><th>Status</th></tr></thead>
-        <tbody>
-          <tr>
-            <td>Version check</td>
-            <td><code>--version</code></td>
-            <td>Output: 1.0.0</td>
-            <td><span class="badge badge-green">Pass</span></td>
-          </tr>
-          <tr>
-            <td>Config generation</td>
-            <td><code>init</code></td>
-            <td>config.yaml generated with defaults</td>
-            <td><span class="badge badge-green">Pass</span></td>
-          </tr>
-          <tr>
-            <td>Snapshot assessment</td>
-            <td><code>snapshot --mock</code></td>
-            <td>30 rules ran, 7 findings, 4 scorecards, HTML + PDF</td>
-            <td><span class="badge badge-green">Pass</span></td>
-          </tr>
-          <tr>
-            <td>Report regeneration</td>
-            <td><code>report</code></td>
-            <td>HTML report regenerated from existing run</td>
-            <td><span class="badge badge-green">Pass</span></td>
-          </tr>
-          <tr>
-            <td>Export packaging</td>
-            <td><code>export</code></td>
-            <td>170KB ZIP with 13 files</td>
-            <td><span class="badge badge-green">Pass</span></td>
-          </tr>
-          <tr>
-            <td>Secrets CRUD</td>
-            <td><code>secrets set/get/list/delete</code></td>
-            <td>Full lifecycle verified</td>
-            <td><span class="badge badge-green">Pass</span></td>
-          </tr>
-          <tr>
-            <td>Cleanup dry-run</td>
-            <td><code>cleanup --dry-run</code></td>
-            <td>Detected eligible run, no deletion</td>
-            <td><span class="badge badge-green">Pass</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </details>
-</section>
-
-<!-- ===== 7. WHAT REMAINS ===== -->
-<section>
-  <h2>What Remains</h2>
-  <div class="card">
-    <table>
-      <thead><tr><th>Item</th><th>Detail</th><th>Status</th></tr></thead>
-      <tbody>
-        <tr>
-          <td>Live Citrix testing</td>
-          <td>Requires Citrix CVAD SDK and a live Citrix environment for real PowerShell collection</td>
-          <td><span class="badge badge-red">Blocked</span></td>
-        </tr>
-        <tr>
-          <td>MSI installer build</td>
-          <td>Requires WiX Toolset v4 on Windows (<code>dotnet build -c Release</code>)</td>
-          <td><span class="badge badge-orange">Ready to build</span></td>
-        </tr>
-        <tr>
-          <td>Cross-compile for Windows</td>
-          <td><code>dotnet publish -r win-x64 --self-contained</code> produces single-file EXE</td>
-          <td><span class="badge badge-orange">Ready to build</span></td>
-        </tr>
-        <tr>
-          <td>DPAPI encryption on Windows</td>
-          <td>Base64 fallback working on Linux/macOS; real DPAPI encryption activates automatically on Windows</td>
-          <td><span class="badge badge-blue">Ready</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</section>
-
-<!-- ===== 8. NUGET DEPENDENCIES ===== -->
-<section>
-  <h2>NuGet Dependencies</h2>
-  <div class="card">
-    <table>
-      <thead><tr><th>Package</th><th>Used By</th><th>Purpose</th></tr></thead>
-      <tbody>
-        <tr><td><code>System.CommandLine</code></td><td>Cli</td><td>CLI argument parsing and command routing</td></tr>
-        <tr><td><code>Microsoft.Extensions.DependencyInjection</code></td><td>Cli</td><td>Service container for DI</td></tr>
-        <tr><td><code>Microsoft.Extensions.Logging</code></td><td>Cli</td><td>Logging infrastructure</td></tr>
-        <tr><td><code>Microsoft.Extensions.Logging.Console</code></td><td>Cli</td><td>Console log output</td></tr>
-        <tr><td><code>Microsoft.Extensions.Logging.Abstractions</code></td><td>Model, Rules, Core, Connectors, Reporting</td><td>ILogger abstraction</td></tr>
-        <tr><td><code>Microsoft.Extensions.DependencyInjection.Abstractions</code></td><td>Core</td><td>DI abstractions</td></tr>
-        <tr><td><code>Microsoft.Data.Sqlite</code></td><td>Core</td><td>SQLite data persistence</td></tr>
-        <tr><td><code>YamlDotNet</code></td><td>Core</td><td>YAML configuration parsing</td></tr>
-        <tr><td><code>System.Security.Cryptography.ProtectedData</code></td><td>Core</td><td>Windows DPAPI support</td></tr>
-        <tr><td><code>QuestPDF</code></td><td>Reporting</td><td>PDF report generation</td></tr>
-        <tr style="background: rgba(110,118,129,0.04);"><td><code>xunit</code></td><td>Tests</td><td>Test framework</td></tr>
-        <tr style="background: rgba(110,118,129,0.04);"><td><code>FluentAssertions</code></td><td>Tests</td><td>Assertion library</td></tr>
-        <tr style="background: rgba(110,118,129,0.04);"><td><code>NSubstitute</code></td><td>Tests</td><td>Mocking framework</td></tr>
-        <tr style="background: rgba(110,118,129,0.04);"><td><code>coverlet.collector</code></td><td>Tests</td><td>Code coverage collection</td></tr>
-        <tr style="background: rgba(110,118,129,0.04);"><td><code>Microsoft.NET.Test.Sdk</code></td><td>Tests</td><td>Test SDK infrastructure</td></tr>
-      </tbody>
-    </table>
-  </div>
-</section>
-
-<!-- ===== 9. SAMPLE DELIVERABLE ===== -->
-<section>
-  <h2>Sample Deliverable</h2>
-  <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 16px;">
-    Below is a representative sample of the HTML assessment report generated by <code>vdi-assess snapshot --mock</code>.
-    This mirrors the actual <code>AssessmentPack.html</code> output, rendered with mock Citrix environment data (2 controllers,
-    3 catalogs, 3 delivery groups, 25 VDAs, 7 findings across 4 domains).
-  </p>
-
-  <div style="border: 1px solid var(--card-border); border-radius: 8px; overflow: hidden; background: #f5f5f7;">
-
-    <!-- Report Header -->
-    <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; padding: 28px 32px; text-align: center;">
-      <div style="font-size: 24px; font-weight: 700; margin-bottom: 6px;">VDI Assessment Pack</div>
-      <div style="font-size: 16px; opacity: 0.9;">Contoso Corp &mdash; Production Citrix Environment</div>
-      <div style="font-size: 13px; opacity: 0.65; margin-top: 6px;">Generated: 2026-02-25 14:30 UTC | Platform: citrix | Tier: Snapshot</div>
-      <div style="font-size: 13px; opacity: 0.65;">Consultant: Brad Jinks | Run ID: run-a7f3c912</div>
+    <!-- M365 — Coming Soon -->
+    <div class="card card-disabled" aria-disabled="true">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="3" width="20" height="18" rx="2"/>
+        <path d="M8 7v10M12 7v10M16 7v10"/>
+        <path d="M2 7h20M2 17h20"/>
+      </svg>
+      <div class="card-title">M365 Migration</div>
+      <p class="card-desc">Tenant-to-tenant migration readiness assessment for Microsoft 365 workloads.</p>
+      <span class="badge badge-soon">Coming Soon</span>
     </div>
 
-    <!-- Report Nav -->
-    <div style="display: flex; justify-content: center; gap: 12px; padding: 12px; background: white; border-bottom: 1px solid #e0e0e0; flex-wrap: wrap;">
-      <span style="padding: 6px 14px; border-radius: 4px; font-weight: 500; font-size: 14px; color: #1a1a2e; background: #e8e8ed;">Executive Summary</span>
-      <span style="padding: 6px 14px; border-radius: 4px; font-weight: 500; font-size: 14px; color: #1a1a2e;">Findings</span>
-      <span style="padding: 6px 14px; border-radius: 4px; font-weight: 500; font-size: 14px; color: #1a1a2e;">Inventory</span>
-      <span style="padding: 6px 14px; border-radius: 4px; font-weight: 500; font-size: 14px; color: #1a1a2e;">Telemetry</span>
-      <span style="padding: 6px 14px; border-radius: 4px; font-weight: 500; font-size: 14px; color: #1a1a2e;">Policies</span>
+    <!-- VDI — Live -->
+    <a href="/vdi.html" class="card card-live">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="3" width="20" height="14" rx="2"/>
+        <path d="M8 21h8M12 17v4"/>
+        <circle cx="12" cy="10" r="3"/>
+      </svg>
+      <div class="card-title">VDI Environment</div>
+      <p class="card-desc">Virtual desktop infrastructure assessment covering user experience, capacity, security, and resilience.</p>
+      <span class="badge badge-live">Live</span>
+    </a>
+
+    <!-- GenAI Readiness — Coming Soon -->
+    <div class="card card-disabled" aria-disabled="true">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2a4 4 0 0 1 4 4c0 1.5-.8 2.8-2 3.5V11h3a3 3 0 0 1 3 3v1"/>
+        <path d="M8 9.5A4 4 0 0 1 12 2"/>
+        <path d="M12 11v4M8 15h8"/>
+        <rect x="6" y="19" width="4" height="3" rx="1"/>
+        <rect x="14" y="19" width="4" height="3" rx="1"/>
+        <path d="M8 19v-4M16 19v-4"/>
+      </svg>
+      <div class="card-title">GenAI Readiness</div>
+      <p class="card-desc">Organizational readiness assessment for generative AI adoption and Copilot deployment.</p>
+      <span class="badge badge-soon">Coming Soon</span>
     </div>
 
-    <div style="max-width: 1100px; margin: 0 auto; padding: 24px;">
-
-      <!-- Executive Summary -->
-      <div style="background: white; border-radius: 8px; padding: 24px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-        <div style="font-size: 18px; font-weight: 600; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #e0e0e0; color: #1a1a2e;">Executive Summary</div>
-
-        <!-- Scorecards -->
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px;">
-          <div style="text-align: center; padding: 18px; border-radius: 8px; background: #e8f5e9; border: 2px solid #4caf50;">
-            <div style="font-size: 36px; font-weight: 700; color: #2e7d32;">85</div>
-            <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: #555;">Capacity</div>
-          </div>
-          <div style="text-align: center; padding: 18px; border-radius: 8px; background: #fff3e0; border: 2px solid #ff9800;">
-            <div style="font-size: 36px; font-weight: 700; color: #e65100;">69</div>
-            <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: #555;">Resilience</div>
-          </div>
-          <div style="text-align: center; padding: 18px; border-radius: 8px; background: #e8f5e9; border: 2px solid #4caf50;">
-            <div style="font-size: 36px; font-weight: 700; color: #2e7d32;">84</div>
-            <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: #555;">Security</div>
-          </div>
-          <div style="text-align: center; padding: 18px; border-radius: 8px; background: #fff3e0; border: 2px solid #ff9800;">
-            <div style="font-size: 36px; font-weight: 700; color: #e65100;">77</div>
-            <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: #555;">UX</div>
-          </div>
-        </div>
-
-        <!-- Severity counts -->
-        <div style="display: flex; gap: 32px; justify-content: center; margin: 20px 0;">
-          <div style="text-align: center;"><span style="display: block; font-size: 28px; font-weight: 700; color: #d32f2f;">0</span><span style="font-size: 11px; text-transform: uppercase; color: #777;">Critical</span></div>
-          <div style="text-align: center;"><span style="display: block; font-size: 28px; font-weight: 700; color: #f57c00;">2</span><span style="font-size: 11px; text-transform: uppercase; color: #777;">High</span></div>
-          <div style="text-align: center;"><span style="display: block; font-size: 28px; font-weight: 700; color: #ffa000;">3</span><span style="font-size: 11px; text-transform: uppercase; color: #777;">Medium</span></div>
-          <div style="text-align: center;"><span style="display: block; font-size: 28px; font-weight: 700; color: #7cb342;">2</span><span style="font-size: 11px; text-transform: uppercase; color: #777;">Low</span></div>
-        </div>
-
-        <!-- Environment -->
-        <div style="background: #f5f5f7; padding: 12px 16px; border-radius: 4px; margin-top: 12px; font-size: 14px; color: #333;">
-          <p><strong>Site:</strong> MockSite | <strong>Version:</strong> 7.41</p>
-          <p><strong>Controllers:</strong> 2 | <strong>Catalogs:</strong> 3 | <strong>Delivery Groups:</strong> 3 | <strong>VDAs:</strong> 25</p>
-        </div>
-      </div>
-
-      <!-- Findings -->
-      <div style="background: white; border-radius: 8px; padding: 24px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-        <div style="font-size: 18px; font-weight: 600; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #e0e0e0; color: #1a1a2e;">Findings</div>
-
-        <!-- Filter bar -->
-        <div style="display: flex; gap: 6px; margin-bottom: 16px;">
-          <span style="padding: 5px 14px; border: 1px solid #1a1a2e; background: #1a1a2e; color: white; border-radius: 4px; font-size: 13px; font-weight: 500;">All</span>
-          <span style="padding: 5px 14px; border: 1px solid #ddd; background: white; border-radius: 4px; font-size: 13px; color: #333;">Critical</span>
-          <span style="padding: 5px 14px; border: 1px solid #ddd; background: white; border-radius: 4px; font-size: 13px; color: #333;">High</span>
-          <span style="padding: 5px 14px; border: 1px solid #ddd; background: white; border-radius: 4px; font-size: 13px; color: #333;">Medium</span>
-          <span style="padding: 5px 14px; border: 1px solid #ddd; background: white; border-radius: 4px; font-size: 13px; color: #333;">Low</span>
-        </div>
-
-        <!-- Finding 1: HIGH -->
-        <div style="border: 1px solid #e0e0e0; border-left: 4px solid #f57c00; border-radius: 8px; margin-bottom: 12px; overflow: hidden;">
-          <div style="padding: 14px 16px;">
-            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: #fff3e0; color: #f57c00; margin-right: 6px;">High</span>
-            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: #e3f2fd; color: #1565c0; margin-right: 6px;">Resilience</span>
-            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: #f3e5f5; color: #7b1fa2;">Effort: M</span>
-            <div style="font-size: 15px; font-weight: 600; margin-top: 8px; color: #1a1a2e;">Single Delivery Controller detected &mdash; single point of failure</div>
-          </div>
-          <div style="padding: 0 16px 14px; font-size: 13px; color: #444; line-height: 1.7;">
-            <p><strong>Impact:</strong> If the sole controller becomes unavailable, no new sessions can be brokered and existing users cannot reconnect after disconnection.</p>
-            <p style="margin-top: 6px;"><strong>Recommendation:</strong> Deploy a second Delivery Controller in a separate failure domain with database mirroring or AlwaysOn AG for the site database.</p>
-            <p style="margin-top: 6px; font-size: 12px; color: #888;">Rule: RES-SINGLE-DDC v1.0 | Confidence: High</p>
-          </div>
-        </div>
-
-        <!-- Finding 2: HIGH -->
-        <div style="border: 1px solid #e0e0e0; border-left: 4px solid #f57c00; border-radius: 8px; margin-bottom: 12px; overflow: hidden;">
-          <div style="padding: 14px 16px;">
-            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: #fff3e0; color: #f57c00; margin-right: 6px;">High</span>
-            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: #e3f2fd; color: #1565c0; margin-right: 6px;">Security</span>
-            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: #f3e5f5; color: #7b1fa2;">Effort: S</span>
-            <div style="font-size: 15px; font-weight: 600; margin-top: 8px; color: #1a1a2e;">Client drive redirection is enabled &mdash; data exfiltration risk</div>
-          </div>
-          <div style="padding: 0 16px 14px; font-size: 13px; color: #444; line-height: 1.7;">
-            <p><strong>Impact:</strong> Users can map local drives into VDI sessions, enabling bulk copy of sensitive data from the virtual environment to unmanaged endpoints.</p>
-            <p style="margin-top: 6px;"><strong>Recommendation:</strong> Disable client drive redirection via Citrix policy. If required for business workflows, restrict to read-only and audit file transfers.</p>
-            <p style="margin-top: 6px; font-size: 12px; color: #888;">Rule: SEC-CLIENT-DRIVE v1.0 | Confidence: High</p>
-          </div>
-        </div>
-
-        <!-- Finding 3: MEDIUM -->
-        <div style="border: 1px solid #e0e0e0; border-left: 4px solid #ffa000; border-radius: 8px; margin-bottom: 12px; overflow: hidden;">
-          <div style="padding: 14px 16px;">
-            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: #fffde7; color: #ffa000; margin-right: 6px;">Medium</span>
-            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: #e3f2fd; color: #1565c0; margin-right: 6px;">Security</span>
-            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: #f3e5f5; color: #7b1fa2;">Effort: S</span>
-            <div style="font-size: 15px; font-weight: 600; margin-top: 8px; color: #1a1a2e;">Client clipboard redirection is enabled &mdash; data exfiltration risk</div>
-          </div>
-          <div style="padding: 0 16px 14px; font-size: 13px; color: #444; line-height: 1.7;">
-            <p><strong>Impact:</strong> Users can copy text and data from the VDI session clipboard to their local device, bypassing DLP controls.</p>
-            <p style="margin-top: 6px;"><strong>Recommendation:</strong> Disable bidirectional clipboard redirection or restrict to paste-in-only via Citrix policy.</p>
-            <p style="margin-top: 6px; font-size: 12px; color: #888;">Rule: SEC-CLIPBOARD v1.0 | Confidence: High</p>
-          </div>
-        </div>
-
-        <!-- Finding 4: MEDIUM -->
-        <div style="border: 1px solid #e0e0e0; border-left: 4px solid #ffa000; border-radius: 8px; margin-bottom: 12px; overflow: hidden;">
-          <div style="padding: 14px 16px;">
-            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: #fffde7; color: #ffa000; margin-right: 6px;">Medium</span>
-            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: #e3f2fd; color: #1565c0; margin-right: 6px;">UX</span>
-            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: #f3e5f5; color: #7b1fa2;">Effort: M</span>
-            <div style="font-size: 15px; font-weight: 600; margin-top: 8px; color: #1a1a2e;">Average logon duration exceeds 45s threshold</div>
-          </div>
-          <div style="padding: 0 16px 14px; font-size: 13px; color: #444; line-height: 1.7;">
-            <p><strong>Impact:</strong> Users experience slow desktop readiness, reducing productivity and increasing support ticket volume. Average logon measured at 52s.</p>
-            <p style="margin-top: 6px;"><strong>Recommendation:</strong> Profile logon components via Citrix Director. Common causes: GPO processing, profile size, antivirus scanning at logon. Target &lt;30s for optimal experience.</p>
-            <p style="margin-top: 6px; font-size: 12px; color: #888;">Rule: UX-AVG-LOGON v1.0 | Confidence: Medium</p>
-          </div>
-        </div>
-
-        <!-- Finding 5: MEDIUM -->
-        <div style="border: 1px solid #e0e0e0; border-left: 4px solid #ffa000; border-radius: 8px; margin-bottom: 12px; overflow: hidden;">
-          <div style="padding: 14px 16px;">
-            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: #fffde7; color: #ffa000; margin-right: 6px;">Medium</span>
-            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: #e3f2fd; color: #1565c0; margin-right: 6px;">Resilience</span>
-            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: #f3e5f5; color: #7b1fa2;">Effort: L</span>
-            <div style="font-size: 15px; font-weight: 600; margin-top: 8px; color: #1a1a2e;">DG-Prod-VDI backed by single machine catalog &mdash; SPOF for image updates</div>
-          </div>
-          <div style="padding: 0 16px 14px; font-size: 13px; color: #444; line-height: 1.7;">
-            <p><strong>Impact:</strong> A failed MCS image update to the sole catalog will render the entire delivery group unable to provision new machines until the image is fixed.</p>
-            <p style="margin-top: 6px;"><strong>Recommendation:</strong> Split VDAs across 2+ catalogs with a canary deployment pattern: update one catalog first, validate, then roll to the remaining.</p>
-            <p style="margin-top: 6px; font-size: 12px; color: #888;">Rule: RES-SINGLE-CATALOG v1.0 | Confidence: High</p>
-          </div>
-        </div>
-
-        <!-- Finding 6: LOW -->
-        <div style="border: 1px solid #e0e0e0; border-left: 4px solid #7cb342; border-radius: 8px; margin-bottom: 12px; overflow: hidden;">
-          <div style="padding: 14px 16px;">
-            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: #f1f8e9; color: #7cb342; margin-right: 6px;">Low</span>
-            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: #e3f2fd; color: #1565c0; margin-right: 6px;">Capacity</span>
-            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: #f3e5f5; color: #7b1fa2;">Effort: S</span>
-            <div style="font-size: 15px; font-weight: 600; margin-top: 8px; color: #1a1a2e;">Catalog MC-Windows11-Static uses static (persistent) machines</div>
-          </div>
-          <div style="padding: 0 16px 14px; font-size: 13px; color: #444; line-height: 1.7;">
-            <p><strong>Impact:</strong> Static machines require individual patching and lifecycle management, increasing operational overhead compared to pooled desktops.</p>
-            <p style="margin-top: 6px;"><strong>Recommendation:</strong> Evaluate whether use cases currently on static VDAs can migrate to pooled desktops with profile management (FSLogix). Maintain static only where persistent state is required.</p>
-            <p style="margin-top: 6px; font-size: 12px; color: #888;">Rule: CAP-STATIC-MACHINES v1.0 | Confidence: Low</p>
-          </div>
-        </div>
-
-        <!-- Finding 7: LOW -->
-        <div style="border: 1px solid #e0e0e0; border-left: 4px solid #7cb342; border-radius: 8px; margin-bottom: 0; overflow: hidden;">
-          <div style="padding: 14px 16px;">
-            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: #f1f8e9; color: #7cb342; margin-right: 6px;">Low</span>
-            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: #e3f2fd; color: #1565c0; margin-right: 6px;">Capacity</span>
-            <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: #f3e5f5; color: #7b1fa2;">Effort: M</span>
-            <div style="font-size: 15px; font-weight: 600; margin-top: 8px; color: #1a1a2e;">Delivery group DG-Prod-HostedApps mixes desktop and server OS VDAs</div>
-          </div>
-          <div style="padding: 0 16px 14px; font-size: 13px; color: #444; line-height: 1.7;">
-            <p><strong>Impact:</strong> Mixed OS types in a single delivery group can cause inconsistent user experience and complicate capacity planning.</p>
-            <p style="margin-top: 6px;"><strong>Recommendation:</strong> Separate desktop and server OS VDAs into distinct delivery groups with appropriate session limits for each.</p>
-            <p style="margin-top: 6px; font-size: 12px; color: #888;">Rule: CAP-OS-MIX v1.0 | Confidence: Medium</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Inventory (collapsed preview) -->
-      <div style="background: white; border-radius: 8px; padding: 24px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-        <div style="font-size: 18px; font-weight: 600; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #e0e0e0; color: #1a1a2e;">Inventory</div>
-
-        <!-- Controllers -->
-        <div style="font-size: 15px; font-weight: 600; margin-bottom: 8px; color: #1a1a2e; cursor: default;">Controllers</div>
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 13px;">
-          <thead><tr><th style="background: #f5f5f7; text-align: left; padding: 8px 10px; font-weight: 600; border-bottom: 2px solid #e0e0e0; color: #333;">FQDN</th><th style="background: #f5f5f7; text-align: left; padding: 8px 10px; font-weight: 600; border-bottom: 2px solid #e0e0e0; color: #333;">Role</th></tr></thead>
-          <tbody>
-            <tr><td style="padding: 8px 10px; border-bottom: 1px solid #eee; color: #333;">ctx-ddc01.contoso.com</td><td style="padding: 8px 10px; border-bottom: 1px solid #eee; color: #333;">Primary</td></tr>
-            <tr><td style="padding: 8px 10px; border-bottom: 1px solid #eee; color: #333;">ctx-ddc02.contoso.com</td><td style="padding: 8px 10px; color: #333;">Secondary</td></tr>
-          </tbody>
-        </table>
-
-        <!-- Catalogs -->
-        <div style="font-size: 15px; font-weight: 600; margin-bottom: 8px; color: #1a1a2e; cursor: default;">Catalogs</div>
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 13px;">
-          <thead><tr><th style="background: #f5f5f7; text-align: left; padding: 8px 10px; font-weight: 600; border-bottom: 2px solid #e0e0e0; color: #333;">Name</th><th style="background: #f5f5f7; text-align: left; padding: 8px 10px; font-weight: 600; border-bottom: 2px solid #e0e0e0; color: #333;">Machine Type</th><th style="background: #f5f5f7; text-align: left; padding: 8px 10px; font-weight: 600; border-bottom: 2px solid #e0e0e0; color: #333;">Provisioning</th></tr></thead>
-          <tbody>
-            <tr><td style="padding: 8px 10px; border-bottom: 1px solid #eee; color: #333;">MC-Windows11-Pooled</td><td style="padding: 8px 10px; border-bottom: 1px solid #eee; color: #333;">Random</td><td style="padding: 8px 10px; border-bottom: 1px solid #eee; color: #333;">MCS</td></tr>
-            <tr><td style="padding: 8px 10px; border-bottom: 1px solid #eee; color: #333;">MC-Windows11-Static</td><td style="padding: 8px 10px; border-bottom: 1px solid #eee; color: #333;">Static</td><td style="padding: 8px 10px; border-bottom: 1px solid #eee; color: #333;">MCS</td></tr>
-            <tr><td style="padding: 8px 10px; color: #333;">MC-ServerOS-Hosted</td><td style="padding: 8px 10px; color: #333;">Random</td><td style="padding: 8px 10px; color: #333;">PVS</td></tr>
-          </tbody>
-        </table>
-
-        <!-- Delivery Groups -->
-        <div style="font-size: 15px; font-weight: 600; margin-bottom: 8px; color: #1a1a2e; cursor: default;">Delivery Groups</div>
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 13px;">
-          <thead><tr><th style="background: #f5f5f7; text-align: left; padding: 8px 10px; font-weight: 600; border-bottom: 2px solid #e0e0e0; color: #333;">Name</th><th style="background: #f5f5f7; text-align: left; padding: 8px 10px; font-weight: 600; border-bottom: 2px solid #e0e0e0; color: #333;">ID</th></tr></thead>
-          <tbody>
-            <tr><td style="padding: 8px 10px; border-bottom: 1px solid #eee; color: #333;">DG-Prod-VDI</td><td style="padding: 8px 10px; border-bottom: 1px solid #eee; color: #333;">citrix:dg-prod-vdi</td></tr>
-            <tr><td style="padding: 8px 10px; border-bottom: 1px solid #eee; color: #333;">DG-Prod-HostedApps</td><td style="padding: 8px 10px; border-bottom: 1px solid #eee; color: #333;">citrix:dg-prod-hosted</td></tr>
-            <tr><td style="padding: 8px 10px; color: #333;">DG-Dev-VDI</td><td style="padding: 8px 10px; color: #333;">citrix:dg-dev-vdi</td></tr>
-          </tbody>
-        </table>
-
-        <!-- VDA Summary -->
-        <div style="font-size: 15px; font-weight: 600; margin-bottom: 8px; color: #1a1a2e; cursor: default;">VDAs</div>
-        <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
-          <thead><tr><th style="background: #f5f5f7; text-align: left; padding: 8px 10px; font-weight: 600; border-bottom: 2px solid #e0e0e0; color: #333;">OS Type</th><th style="background: #f5f5f7; text-align: left; padding: 8px 10px; font-weight: 600; border-bottom: 2px solid #e0e0e0; color: #333;">Count</th></tr></thead>
-          <tbody>
-            <tr><td style="padding: 8px 10px; border-bottom: 1px solid #eee; color: #333;">DesktopOS</td><td style="padding: 8px 10px; border-bottom: 1px solid #eee; color: #333;">17</td></tr>
-            <tr><td style="padding: 8px 10px; color: #333;">ServerOS</td><td style="padding: 8px 10px; color: #333;">8</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Telemetry -->
-      <div style="background: white; border-radius: 8px; padding: 24px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-        <div style="font-size: 18px; font-weight: 600; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #e0e0e0; color: #1a1a2e;">Telemetry</div>
-        <div style="font-size: 15px; font-weight: 600; margin-bottom: 8px; color: #1a1a2e;">Session Concurrency</div>
-        <p style="font-size: 14px; color: #333; margin-bottom: 16px;"><strong>Peak:</strong> 118 | <strong>Average:</strong> 99 | <strong>Samples:</strong> 24</p>
-        <div style="font-size: 15px; font-weight: 600; margin-bottom: 8px; color: #1a1a2e;">Logon Performance</div>
-        <p style="font-size: 14px; color: #333;"><strong>Avg P95:</strong> 2,480ms | <strong>Max P95:</strong> 3,412ms</p>
-      </div>
-
-      <!-- Policies -->
-      <div style="background: white; border-radius: 8px; padding: 24px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-        <div style="font-size: 18px; font-weight: 600; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #e0e0e0; color: #1a1a2e;">Policy Settings</div>
-        <div style="font-size: 15px; font-weight: 600; margin-bottom: 8px; color: #1a1a2e; cursor: default;">ICA</div>
-        <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
-          <thead><tr><th style="background: #f5f5f7; text-align: left; padding: 8px 10px; font-weight: 600; border-bottom: 2px solid #e0e0e0; color: #333;">Setting</th><th style="background: #f5f5f7; text-align: left; padding: 8px 10px; font-weight: 600; border-bottom: 2px solid #e0e0e0; color: #333;">Value</th><th style="background: #f5f5f7; text-align: left; padding: 8px 10px; font-weight: 600; border-bottom: 2px solid #e0e0e0; color: #333;">Source</th></tr></thead>
-          <tbody>
-            <tr><td style="padding: 8px 10px; border-bottom: 1px solid #eee; color: #333;">AudioQuality</td><td style="padding: 8px 10px; border-bottom: 1px solid #eee; color: #333;">Medium</td><td style="padding: 8px 10px; border-bottom: 1px solid #eee; color: #333;">SitePolicy</td></tr>
-            <tr><td style="padding: 8px 10px; border-bottom: 1px solid #eee; color: #333;">ClientClipboardRedirection</td><td style="padding: 8px 10px; border-bottom: 1px solid #eee; color: #f57c00; font-weight: 600;">Allowed</td><td style="padding: 8px 10px; border-bottom: 1px solid #eee; color: #333;">SitePolicy</td></tr>
-            <tr><td style="padding: 8px 10px; border-bottom: 1px solid #eee; color: #333;">ClientDriveRedirection</td><td style="padding: 8px 10px; border-bottom: 1px solid #eee; color: #f57c00; font-weight: 600;">Allowed</td><td style="padding: 8px 10px; border-bottom: 1px solid #eee; color: #333;">SitePolicy</td></tr>
-            <tr><td style="padding: 8px 10px; border-bottom: 1px solid #eee; color: #333;">ClientUSBRedirection</td><td style="padding: 8px 10px; border-bottom: 1px solid #eee; color: #4caf50;">Prohibited</td><td style="padding: 8px 10px; border-bottom: 1px solid #eee; color: #333;">SitePolicy</td></tr>
-            <tr><td style="padding: 8px 10px; color: #333;">SessionReliability</td><td style="padding: 8px 10px; color: #4caf50;">Enabled</td><td style="padding: 8px 10px; color: #333;">SitePolicy</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Report Footer -->
-      <div style="text-align: center; padding: 16px; color: #888; font-size: 12px;">
-        <p>VDI Assessment Pack v1.0.0 | Generated 2026-02-25 14:30 UTC</p>
-        <p>Run ID: run-a7f3c912 | Assessment Key: 3e8b...f41a</p>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ===== 10. EXECUTIVE RECOMMENDATIONS ===== -->
-<section>
-  <h2>Sample Deliverable — Executive Recommendations</h2>
-  <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 16px;">
-    This is the follow-on deliverable: a CTO-ready recommendations deck that translates assessment findings into
-    prioritized remediation projects with effort, timeline, risk reduction, and business justification.
-    Designed to be presented in a steering committee or budget review.
-  </p>
-
-  <div style="border: 1px solid var(--card-border); border-radius: 8px; overflow: hidden; background: #f5f5f7;">
-
-    <!-- Slide: Title -->
-    <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; padding: 48px 40px; text-align: center;">
-      <div style="font-size: 13px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.5; margin-bottom: 12px;">Confidential</div>
-      <div style="font-size: 28px; font-weight: 700; margin-bottom: 8px;">VDI Environment Remediation Roadmap</div>
-      <div style="font-size: 16px; opacity: 0.85; margin-bottom: 24px;">Contoso Corp &mdash; Citrix Virtual Apps &amp; Desktops</div>
-      <div style="display: inline-block; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 10px 24px; font-size: 13px; opacity: 0.7;">
-        Prepared: February 2026 &nbsp;|&nbsp; Assessment Run: run-a7f3c912 &nbsp;|&nbsp; 7 Findings &rarr; 5 Projects
-      </div>
+    <!-- MDM — Coming Soon -->
+    <div class="card card-disabled" aria-disabled="true">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="7" y="2" width="10" height="20" rx="2"/>
+        <path d="M11 18h2"/>
+        <path d="M3 8h4M17 8h4M3 14h4M17 14h4"/>
+      </svg>
+      <div class="card-title">MDM &amp; Endpoint</div>
+      <p class="card-desc">Mobile device management and endpoint compliance assessment for Intune and third-party MDM platforms.</p>
+      <span class="badge badge-soon">Coming Soon</span>
     </div>
 
-    <div style="max-width: 1100px; margin: 0 auto; padding: 32px 24px;">
-
-      <!-- Slide: Current State Summary -->
-      <div style="background: white; border-radius: 8px; padding: 28px 32px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-        <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; margin-bottom: 4px;">Current State</div>
-        <div style="font-size: 20px; font-weight: 700; color: #1a1a2e; margin-bottom: 20px;">Assessment Summary</div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
-          <!-- Left: scores -->
-          <div>
-            <div style="font-size: 13px; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">Domain Scores</div>
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-              <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 80px; font-size: 13px; font-weight: 600; color: #555; text-align: right;">Capacity</div>
-                <div style="flex: 1; background: #eee; border-radius: 4px; height: 24px; position: relative;">
-                  <div style="width: 85%; height: 100%; background: #4caf50; border-radius: 4px; display: flex; align-items: center; padding-left: 8px; font-size: 12px; font-weight: 700; color: white;">85</div>
-                </div>
-              </div>
-              <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 80px; font-size: 13px; font-weight: 600; color: #555; text-align: right;">Security</div>
-                <div style="flex: 1; background: #eee; border-radius: 4px; height: 24px; position: relative;">
-                  <div style="width: 84%; height: 100%; background: #4caf50; border-radius: 4px; display: flex; align-items: center; padding-left: 8px; font-size: 12px; font-weight: 700; color: white;">84</div>
-                </div>
-              </div>
-              <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 80px; font-size: 13px; font-weight: 600; color: #555; text-align: right;">UX</div>
-                <div style="flex: 1; background: #eee; border-radius: 4px; height: 24px; position: relative;">
-                  <div style="width: 77%; height: 100%; background: #ff9800; border-radius: 4px; display: flex; align-items: center; padding-left: 8px; font-size: 12px; font-weight: 700; color: white;">77</div>
-                </div>
-              </div>
-              <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 80px; font-size: 13px; font-weight: 600; color: #555; text-align: right;">Resilience</div>
-                <div style="flex: 1; background: #eee; border-radius: 4px; height: 24px; position: relative;">
-                  <div style="width: 69%; height: 100%; background: #ff9800; border-radius: 4px; display: flex; align-items: center; padding-left: 8px; font-size: 12px; font-weight: 700; color: white;">69</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Right: key risks -->
-          <div>
-            <div style="font-size: 13px; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">Key Risk Areas</div>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: #333; line-height: 1.5;">
-                <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #f57c00; margin-top: 5px; flex-shrink: 0;"></span>
-                <span><strong>Single point of failure</strong> &mdash; One Delivery Controller brokers all sessions. Loss takes down the environment.</span>
-              </div>
-              <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: #333; line-height: 1.5;">
-                <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #f57c00; margin-top: 5px; flex-shrink: 0;"></span>
-                <span><strong>Data exfiltration exposure</strong> &mdash; Client drives and clipboard mapped into sessions without DLP controls.</span>
-              </div>
-              <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: #333; line-height: 1.5;">
-                <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ffa000; margin-top: 5px; flex-shrink: 0;"></span>
-                <span><strong>Degraded user experience</strong> &mdash; Logon times averaging 52s (target &lt;30s). Profile load and GPO processing primary contributors.</span>
-              </div>
-              <div style="display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: #333; line-height: 1.5;">
-                <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ffa000; margin-top: 5px; flex-shrink: 0;"></span>
-                <span><strong>Fragile update pipeline</strong> &mdash; Production VDI backed by single machine catalog. Failed image update = full outage.</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide: Recommended Projects -->
-      <div style="background: white; border-radius: 8px; padding: 28px 32px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-        <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; margin-bottom: 4px;">Remediation Roadmap</div>
-        <div style="font-size: 20px; font-weight: 700; color: #1a1a2e; margin-bottom: 24px;">Recommended Projects</div>
-
-        <!-- Project 1 -->
-        <div style="border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 16px; overflow: hidden;">
-          <div style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: #fafafa; border-bottom: 1px solid #e0e0e0;">
-            <div style="background: #d32f2f; color: white; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 4px; text-transform: uppercase;">P1</div>
-            <div style="flex: 1;">
-              <div style="font-size: 16px; font-weight: 700; color: #1a1a2e;">Controller High Availability</div>
-              <div style="font-size: 12px; color: #777;">Eliminate single Delivery Controller SPOF</div>
-            </div>
-            <div style="text-align: right;">
-              <div style="font-size: 11px; color: #888; text-transform: uppercase;">Timeline</div>
-              <div style="font-size: 14px; font-weight: 600; color: #1a1a2e;">2-3 weeks</div>
-            </div>
-          </div>
-          <div style="padding: 16px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 13px;">
-            <div>
-              <div style="font-weight: 600; color: #555; margin-bottom: 6px;">Scope</div>
-              <ul style="margin: 0; padding-left: 18px; color: #333; line-height: 1.7;">
-                <li>Deploy second DDC (ctx-ddc02) in alternate rack/subnet</li>
-                <li>Configure SQL AlwaysOn AG for site database</li>
-                <li>Validate broker failover with controlled DDC shutdown test</li>
-                <li>Update StoreFront server list for load balancing</li>
-              </ul>
-            </div>
-            <div>
-              <div style="font-weight: 600; color: #555; margin-bottom: 6px;">Business Case</div>
-              <p style="color: #333; line-height: 1.7; margin: 0;">Current state: complete VDI outage on single server failure. Post-remediation: zero-downtime failover with automatic session reconnection. <strong>Addresses findings:</strong> RES-SINGLE-DDC</p>
-              <div style="margin-top: 10px; display: flex; gap: 16px;">
-                <div><span style="font-size: 11px; color: #888; display: block;">Effort</span><span style="font-weight: 600; color: #1a1a2e;">Medium</span></div>
-                <div><span style="font-size: 11px; color: #888; display: block;">Risk Reduction</span><span style="font-weight: 600; color: #4caf50;">Resilience +16</span></div>
-                <div><span style="font-size: 11px; color: #888; display: block;">Est. Cost</span><span style="font-weight: 600; color: #1a1a2e;">$8-12K</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Project 2 -->
-        <div style="border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 16px; overflow: hidden;">
-          <div style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: #fafafa; border-bottom: 1px solid #e0e0e0;">
-            <div style="background: #d32f2f; color: white; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 4px; text-transform: uppercase;">P1</div>
-            <div style="flex: 1;">
-              <div style="font-size: 16px; font-weight: 700; color: #1a1a2e;">ICA Policy Hardening</div>
-              <div style="font-size: 12px; color: #777;">Close data exfiltration vectors via Citrix policy</div>
-            </div>
-            <div style="text-align: right;">
-              <div style="font-size: 11px; color: #888; text-transform: uppercase;">Timeline</div>
-              <div style="font-size: 14px; font-weight: 600; color: #1a1a2e;">1 week</div>
-            </div>
-          </div>
-          <div style="padding: 16px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 13px;">
-            <div>
-              <div style="font-weight: 600; color: #555; margin-bottom: 6px;">Scope</div>
-              <ul style="margin: 0; padding-left: 18px; color: #333; line-height: 1.7;">
-                <li>Disable client drive redirection (or restrict to read-only with audit logging)</li>
-                <li>Restrict clipboard to paste-in-only (server &rarr; client blocked)</li>
-                <li>Document exception process for business-justified overrides</li>
-                <li>Validate with user acceptance testing across key workflows</li>
-              </ul>
-            </div>
-            <div>
-              <div style="font-weight: 600; color: #555; margin-bottom: 6px;">Business Case</div>
-              <p style="color: #333; line-height: 1.7; margin: 0;">Two open data exfiltration paths allow unrestricted data movement from VDI to unmanaged endpoints. Quick policy change &mdash; no infrastructure spend. <strong>Addresses findings:</strong> SEC-CLIENT-DRIVE, SEC-CLIPBOARD</p>
-              <div style="margin-top: 10px; display: flex; gap: 16px;">
-                <div><span style="font-size: 11px; color: #888; display: block;">Effort</span><span style="font-weight: 600; color: #1a1a2e;">Small</span></div>
-                <div><span style="font-size: 11px; color: #888; display: block;">Risk Reduction</span><span style="font-weight: 600; color: #4caf50;">Security +16</span></div>
-                <div><span style="font-size: 11px; color: #888; display: block;">Est. Cost</span><span style="font-weight: 600; color: #1a1a2e;">$0</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Project 3 -->
-        <div style="border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 16px; overflow: hidden;">
-          <div style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: #fafafa; border-bottom: 1px solid #e0e0e0;">
-            <div style="background: #f57c00; color: white; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 4px; text-transform: uppercase;">P2</div>
-            <div style="flex: 1;">
-              <div style="font-size: 16px; font-weight: 700; color: #1a1a2e;">Logon Performance Optimization</div>
-              <div style="font-size: 12px; color: #777;">Reduce average logon from 52s to &lt;30s target</div>
-            </div>
-            <div style="text-align: right;">
-              <div style="font-size: 11px; color: #888; text-transform: uppercase;">Timeline</div>
-              <div style="font-size: 14px; font-weight: 600; color: #1a1a2e;">3-4 weeks</div>
-            </div>
-          </div>
-          <div style="padding: 16px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 13px;">
-            <div>
-              <div style="font-weight: 600; color: #555; margin-bottom: 6px;">Scope</div>
-              <ul style="margin: 0; padding-left: 18px; color: #333; line-height: 1.7;">
-                <li>Baseline logon phases via Citrix Director (profile load, GPO, interactive)</li>
-                <li>Implement FSLogix Profile Containers to eliminate profile copy</li>
-                <li>Audit and prune GPOs applied to VDA OUs (target &lt;5s GPO phase)</li>
-                <li>Move AV scanning to scheduled rather than on-logon</li>
-                <li>Re-measure with vdi-assess baseline (7-day collection)</li>
-              </ul>
-            </div>
-            <div>
-              <div style="font-weight: 600; color: #555; margin-bottom: 6px;">Business Case</div>
-              <p style="color: #333; line-height: 1.7; margin: 0;">52s logon = 22s of lost productivity per session start across 120+ daily logons. Annualized: ~200 hours/year. FSLogix eliminates largest contributor (profile load). <strong>Addresses findings:</strong> UX-AVG-LOGON</p>
-              <div style="margin-top: 10px; display: flex; gap: 16px;">
-                <div><span style="font-size: 11px; color: #888; display: block;">Effort</span><span style="font-weight: 600; color: #1a1a2e;">Medium</span></div>
-                <div><span style="font-size: 11px; color: #888; display: block;">Risk Reduction</span><span style="font-weight: 600; color: #4caf50;">UX +8</span></div>
-                <div><span style="font-size: 11px; color: #888; display: block;">Est. Cost</span><span style="font-weight: 600; color: #1a1a2e;">$3-5K</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Project 4 -->
-        <div style="border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 16px; overflow: hidden;">
-          <div style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: #fafafa; border-bottom: 1px solid #e0e0e0;">
-            <div style="background: #f57c00; color: white; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 4px; text-transform: uppercase;">P2</div>
-            <div style="flex: 1;">
-              <div style="font-size: 16px; font-weight: 700; color: #1a1a2e;">Image Update Pipeline Resilience</div>
-              <div style="font-size: 12px; color: #777;">Canary catalog pattern to eliminate update blast radius</div>
-            </div>
-            <div style="text-align: right;">
-              <div style="font-size: 11px; color: #888; text-transform: uppercase;">Timeline</div>
-              <div style="font-size: 14px; font-weight: 600; color: #1a1a2e;">2-3 weeks</div>
-            </div>
-          </div>
-          <div style="padding: 16px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 13px;">
-            <div>
-              <div style="font-weight: 600; color: #555; margin-bottom: 6px;">Scope</div>
-              <ul style="margin: 0; padding-left: 18px; color: #333; line-height: 1.7;">
-                <li>Split MC-Windows11-Pooled into Canary (20%) and Production (80%) catalogs</li>
-                <li>Assign both catalogs to DG-Prod-VDI</li>
-                <li>Establish change process: update Canary &rarr; soak 24h &rarr; update Production</li>
-                <li>Create runbook for emergency rollback (revert master image)</li>
-              </ul>
-            </div>
-            <div>
-              <div style="font-weight: 600; color: #555; margin-bottom: 6px;">Business Case</div>
-              <p style="color: #333; line-height: 1.7; margin: 0;">Current state: bad image update takes down 100% of production VDI. Post-remediation: bad image affects only 20% canary pool, caught before production rollout. <strong>Addresses findings:</strong> RES-SINGLE-CATALOG</p>
-              <div style="margin-top: 10px; display: flex; gap: 16px;">
-                <div><span style="font-size: 11px; color: #888; display: block;">Effort</span><span style="font-weight: 600; color: #1a1a2e;">Large</span></div>
-                <div><span style="font-size: 11px; color: #888; display: block;">Risk Reduction</span><span style="font-weight: 600; color: #4caf50;">Resilience +8</span></div>
-                <div><span style="font-size: 11px; color: #888; display: block;">Est. Cost</span><span style="font-weight: 600; color: #1a1a2e;">$2-4K</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Project 5 -->
-        <div style="border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 0; overflow: hidden;">
-          <div style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: #fafafa; border-bottom: 1px solid #e0e0e0;">
-            <div style="background: #7cb342; color: white; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 4px; text-transform: uppercase;">P3</div>
-            <div style="flex: 1;">
-              <div style="font-size: 16px; font-weight: 700; color: #1a1a2e;">Desktop Modernization &amp; DG Restructure</div>
-              <div style="font-size: 12px; color: #777;">Migrate static VDAs to pooled, separate OS types</div>
-            </div>
-            <div style="text-align: right;">
-              <div style="font-size: 11px; color: #888; text-transform: uppercase;">Timeline</div>
-              <div style="font-size: 14px; font-weight: 600; color: #1a1a2e;">4-6 weeks</div>
-            </div>
-          </div>
-          <div style="padding: 16px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 13px;">
-            <div>
-              <div style="font-weight: 600; color: #555; margin-bottom: 6px;">Scope</div>
-              <ul style="margin: 0; padding-left: 18px; color: #333; line-height: 1.7;">
-                <li>Evaluate static VDA workloads for FSLogix + pooled migration</li>
-                <li>Pilot 5 users on pooled desktops with profile containers</li>
-                <li>Separate DG-Prod-HostedApps into DesktopOS and ServerOS delivery groups</li>
-                <li>Set appropriate session limits per OS type (1:1 desktop, 15:1 server)</li>
-                <li>Decommission static catalog post-migration</li>
-              </ul>
-            </div>
-            <div>
-              <div style="font-weight: 600; color: #555; margin-bottom: 6px;">Business Case</div>
-              <p style="color: #333; line-height: 1.7; margin: 0;">Static VDAs carry 3x the patching overhead of pooled. Mixed OS delivery groups produce unpredictable density and capacity planning. Modernization reduces OpEx and simplifies lifecycle. <strong>Addresses findings:</strong> CAP-STATIC-MACHINES, CAP-OS-MIX</p>
-              <div style="margin-top: 10px; display: flex; gap: 16px;">
-                <div><span style="font-size: 11px; color: #888; display: block;">Effort</span><span style="font-weight: 600; color: #1a1a2e;">Large</span></div>
-                <div><span style="font-size: 11px; color: #888; display: block;">Risk Reduction</span><span style="font-weight: 600; color: #4caf50;">Capacity +6</span></div>
-                <div><span style="font-size: 11px; color: #888; display: block;">Est. Cost</span><span style="font-weight: 600; color: #1a1a2e;">$5-8K</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide: Timeline -->
-      <div style="background: white; border-radius: 8px; padding: 28px 32px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-        <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; margin-bottom: 4px;">Implementation Timeline</div>
-        <div style="font-size: 20px; font-weight: 700; color: #1a1a2e; margin-bottom: 24px;">Phased Execution Plan</div>
-
-        <!-- Timeline visualization -->
-        <div style="position: relative; padding-left: 24px; border-left: 3px solid #e0e0e0;">
-          <!-- Phase 1 -->
-          <div style="position: relative; margin-bottom: 28px; padding-left: 24px;">
-            <div style="position: absolute; left: -33px; top: 2px; width: 20px; height: 20px; background: #d32f2f; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 0 2px #d32f2f;"></div>
-            <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #d32f2f; font-weight: 700; margin-bottom: 4px;">Weeks 1-3 &mdash; Immediate</div>
-            <div style="font-size: 16px; font-weight: 600; color: #1a1a2e; margin-bottom: 6px;">Phase 1: Harden &amp; Protect</div>
-            <div style="font-size: 13px; color: #555; line-height: 1.6;">
-              <strong>ICA Policy Hardening</strong> (Week 1) &mdash; Disable drive/clipboard redirection. Zero cost, immediate risk reduction.<br>
-              <strong>Controller HA</strong> (Weeks 2-3) &mdash; Deploy second DDC, configure SQL AG, validate failover.
-            </div>
-            <div style="margin-top: 8px; display: flex; gap: 20px; font-size: 12px;">
-              <span style="color: #888;">Findings resolved: <strong style="color: #333;">3 of 7</strong></span>
-              <span style="color: #888;">Score impact: <strong style="color: #4caf50;">Resilience 69&rarr;85, Security 84&rarr;100</strong></span>
-            </div>
-          </div>
-
-          <!-- Phase 2 -->
-          <div style="position: relative; margin-bottom: 28px; padding-left: 24px;">
-            <div style="position: absolute; left: -33px; top: 2px; width: 20px; height: 20px; background: #f57c00; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 0 2px #f57c00;"></div>
-            <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #f57c00; font-weight: 700; margin-bottom: 4px;">Weeks 4-7 &mdash; Near-Term</div>
-            <div style="font-size: 16px; font-weight: 600; color: #1a1a2e; margin-bottom: 6px;">Phase 2: Optimize &amp; Stabilize</div>
-            <div style="font-size: 13px; color: #555; line-height: 1.6;">
-              <strong>Logon Performance</strong> (Weeks 4-5) &mdash; Deploy FSLogix, prune GPOs, reschedule AV. Baseline with 7-day collection.<br>
-              <strong>Canary Catalog</strong> (Weeks 6-7) &mdash; Split catalog, establish update pipeline, write rollback runbook.
-            </div>
-            <div style="margin-top: 8px; display: flex; gap: 20px; font-size: 12px;">
-              <span style="color: #888;">Findings resolved: <strong style="color: #333;">5 of 7</strong></span>
-              <span style="color: #888;">Score impact: <strong style="color: #4caf50;">UX 77&rarr;85, Resilience 85&rarr;93</strong></span>
-            </div>
-          </div>
-
-          <!-- Phase 3 -->
-          <div style="position: relative; padding-left: 24px;">
-            <div style="position: absolute; left: -33px; top: 2px; width: 20px; height: 20px; background: #7cb342; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 0 2px #7cb342;"></div>
-            <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #7cb342; font-weight: 700; margin-bottom: 4px;">Weeks 8-13 &mdash; Strategic</div>
-            <div style="font-size: 16px; font-weight: 600; color: #1a1a2e; margin-bottom: 6px;">Phase 3: Modernize</div>
-            <div style="font-size: 13px; color: #555; line-height: 1.6;">
-              <strong>Desktop Modernization</strong> (Weeks 8-13) &mdash; Pilot pooled migration, restructure delivery groups by OS type, decommission static catalog.
-            </div>
-            <div style="margin-top: 8px; display: flex; gap: 20px; font-size: 12px;">
-              <span style="color: #888;">Findings resolved: <strong style="color: #333;">7 of 7</strong></span>
-              <span style="color: #888;">Score impact: <strong style="color: #4caf50;">All domains &ge;91</strong></span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide: Projected Outcomes -->
-      <div style="background: white; border-radius: 8px; padding: 28px 32px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-        <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; margin-bottom: 4px;">Projected Outcomes</div>
-        <div style="font-size: 20px; font-weight: 700; color: #1a1a2e; margin-bottom: 24px;">Before &amp; After</div>
-
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;">
-          <div style="text-align: center; padding: 16px; border-radius: 8px; border: 1px solid #e0e0e0;">
-            <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: #888; margin-bottom: 8px;">Capacity</div>
-            <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-              <span style="font-size: 24px; font-weight: 700; color: #888; text-decoration: line-through;">85</span>
-              <span style="font-size: 16px; color: #aaa;">&rarr;</span>
-              <span style="font-size: 28px; font-weight: 700; color: #4caf50;">91</span>
-            </div>
-          </div>
-          <div style="text-align: center; padding: 16px; border-radius: 8px; border: 1px solid #e0e0e0;">
-            <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: #888; margin-bottom: 8px;">Resilience</div>
-            <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-              <span style="font-size: 24px; font-weight: 700; color: #888; text-decoration: line-through;">69</span>
-              <span style="font-size: 16px; color: #aaa;">&rarr;</span>
-              <span style="font-size: 28px; font-weight: 700; color: #4caf50;">93</span>
-            </div>
-          </div>
-          <div style="text-align: center; padding: 16px; border-radius: 8px; border: 1px solid #e0e0e0;">
-            <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: #888; margin-bottom: 8px;">Security</div>
-            <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-              <span style="font-size: 24px; font-weight: 700; color: #888; text-decoration: line-through;">84</span>
-              <span style="font-size: 16px; color: #aaa;">&rarr;</span>
-              <span style="font-size: 28px; font-weight: 700; color: #4caf50;">100</span>
-            </div>
-          </div>
-          <div style="text-align: center; padding: 16px; border-radius: 8px; border: 1px solid #e0e0e0;">
-            <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: #888; margin-bottom: 8px;">UX</div>
-            <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-              <span style="font-size: 24px; font-weight: 700; color: #888; text-decoration: line-through;">77</span>
-              <span style="font-size: 16px; color: #aaa;">&rarr;</span>
-              <span style="font-size: 28px; font-weight: 700; color: #4caf50;">85</span>
-            </div>
-          </div>
-        </div>
-
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
-          <div style="background: #f5f5f7; padding: 16px; border-radius: 6px; text-align: center;">
-            <div style="font-size: 24px; font-weight: 700; color: #1a1a2e;">$18-29K</div>
-            <div style="font-size: 12px; color: #888; margin-top: 4px;">Total estimated investment</div>
-          </div>
-          <div style="background: #f5f5f7; padding: 16px; border-radius: 6px; text-align: center;">
-            <div style="font-size: 24px; font-weight: 700; color: #1a1a2e;">13 weeks</div>
-            <div style="font-size: 12px; color: #888; margin-top: 4px;">Full roadmap duration</div>
-          </div>
-          <div style="background: #f5f5f7; padding: 16px; border-radius: 6px; text-align: center;">
-            <div style="font-size: 24px; font-weight: 700; color: #4caf50;">7 / 7</div>
-            <div style="font-size: 12px; color: #888; margin-top: 4px;">Findings resolved</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide: Next Steps -->
-      <div style="background: white; border-radius: 8px; padding: 28px 32px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-        <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #888; margin-bottom: 4px;">Next Steps</div>
-        <div style="font-size: 20px; font-weight: 700; color: #1a1a2e; margin-bottom: 20px;">Recommended Actions</div>
-
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
-          <div style="display: flex; gap: 12px; padding: 16px; background: #fafafa; border-radius: 6px; align-items: flex-start;">
-            <div style="background: #1a1a2e; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0;">1</div>
-            <div>
-              <div style="font-size: 14px; font-weight: 600; color: #1a1a2e;">Approve Phase 1 scope</div>
-              <div style="font-size: 12px; color: #666; margin-top: 2px;">Policy hardening can begin immediately. DDC deployment requires server provisioning lead time.</div>
-            </div>
-          </div>
-          <div style="display: flex; gap: 12px; padding: 16px; background: #fafafa; border-radius: 6px; align-items: flex-start;">
-            <div style="background: #1a1a2e; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0;">2</div>
-            <div>
-              <div style="font-size: 14px; font-weight: 600; color: #1a1a2e;">Schedule change windows</div>
-              <div style="font-size: 12px; color: #666; margin-top: 2px;">Policy changes during maintenance window. DDC failover test requires 15-min controlled outage.</div>
-            </div>
-          </div>
-          <div style="display: flex; gap: 12px; padding: 16px; background: #fafafa; border-radius: 6px; align-items: flex-start;">
-            <div style="background: #1a1a2e; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0;">3</div>
-            <div>
-              <div style="font-size: 14px; font-weight: 600; color: #1a1a2e;">Procure FSLogix licenses</div>
-              <div style="font-size: 12px; color: #666; margin-top: 2px;">Included with Microsoft 365 E3/E5. Confirm entitlement or procure standalone before Phase 2.</div>
-            </div>
-          </div>
-          <div style="display: flex; gap: 12px; padding: 16px; background: #fafafa; border-radius: 6px; align-items: flex-start;">
-            <div style="background: #1a1a2e; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0;">4</div>
-            <div>
-              <div style="font-size: 14px; font-weight: 600; color: #1a1a2e;">Run baseline assessment</div>
-              <div style="font-size: 12px; color: #666; margin-top: 2px;">After Phase 2 completes, run <code style="background: #eee; padding: 1px 4px; border-radius: 3px; font-size: 11px;">vdi-assess baseline</code> (7-day) to validate improvements and establish new benchmark.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Slide Footer -->
-    <div style="text-align: center; padding: 16px; color: #888; font-size: 12px; border-top: 1px solid #e0e0e0;">
-      Confidential &mdash; Contoso Corp &mdash; VDI Remediation Roadmap &mdash; February 2026
+    <!-- Application Compatibility — Coming Soon -->
+    <div class="card card-disabled" aria-disabled="true">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+        <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+        <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+        <rect x="14" y="14" width="7" height="7" rx="1.5"/>
+        <path d="M10 6.5h4M6.5 10v4M17.5 10v4M10 17.5h4"/>
+      </svg>
+      <div class="card-title">App Compatibility</div>
+      <p class="card-desc">Application compatibility testing and remediation planning for OS migrations and platform upgrades.</p>
+      <span class="badge badge-soon">Coming Soon</span>
     </div>
 
   </div>
-</section>
+</main>
 
-</div>
-
-<footer style="text-align: center; padding: 32px; border-top: 1px solid var(--card-border); color: var(--text-secondary); font-size: 12px;">
-  Generated from source analysis &middot; VDI Assessment Pack v1.0.0 &middot; .NET 8.0 / C# 12
+<footer class="footer">
+  &copy; 2026 Jinks Labs
 </footer>
 
 </body>
